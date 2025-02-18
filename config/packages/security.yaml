@@ -8,7 +8,7 @@ security:
             memory:
                 users:
                     admin@exemple.com:
-                        password: '$2y$13$s9yldOnH4SlOw9U8UEs8F.yWx7EZtTqciSNgffTbAOBnj/7IwCC0y' # Mot de passe : admin
+                        password: '$2y$13$8nih2IAJeSY2yYlWWHVW/eNlVInSMJq6zzc1Gbyje3vR5nZKnDC2S' # Mot de passe : admin
                         roles: ['ROLE_ADMIN']
                     user@exemple.com:
                         password: '$2y$13$bAjdC3uTYhQgyztwh554uOjFo4GJPZ0rF06sAx8qw6ZzUj/EfW9Ci' # Mot de passe : user

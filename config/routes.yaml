@@ -3,3 +3,8 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+# Ajout de la route pour le tableau de bord après connexion
+app_dashboard:
+    path: /dashboard
+    controller: App\Controller\DashboardController::index
