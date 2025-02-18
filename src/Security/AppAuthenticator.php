@@ -46,8 +46,20 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        // Redirection après connexion réussie
-        return new RedirectResponse($this->urlGenerator->generate('app_dashboard')); 
+        // Vérifier le rôle de l'utilisateur connecté
+        $roles = $token->getRoleNames();
+        dump($roles);
+
+        if (in_array('ROLE_ADMIN', $roles, true)) {
+            return new RedirectResponse($this->urlGenerator->generate('app_dashboard')); // Redirection pour admin
+        }
+
+        if (in_array('ROLE_USER', $roles, true)) {
+            return new RedirectResponse($this->urlGenerator->generate('app_user_dashboard')); // Redirection pour utilisateur
+        }
+
+        // Par défaut, renvoie vers la page d'accueil si aucun rôle ne correspond
+        return new RedirectResponse($this->urlGenerator->generate('home'));
     }
 
     protected function getLoginUrl(Request $request): string

@@ -36,5 +36,5 @@ security:
             entry_point: App\Security\AppAuthenticator # ✅ Définit l'authenticator principal
 
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/account, roles: ROLE_USER }
+        - { path: ^/dashboard, roles: ROLE_ADMIN }
+        - { path: ^/user-dashboard, roles: ROLE_USER }

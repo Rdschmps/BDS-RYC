@@ -8,3 +8,7 @@ controllers:
 app_dashboard:
     path: /dashboard
     controller: App\Controller\DashboardController::index
+
+app_user_dashboard:
+    path: /user-dashboard
+    controller: App\Controller\UserDashboardController::index
