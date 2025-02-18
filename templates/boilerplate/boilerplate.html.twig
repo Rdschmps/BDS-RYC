@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    {% include 'components/head.html.twig' %}
+</head>
+<body>
+{% include 'components/header.html.twig' %}
+<div id="notification-container" class="notification-container"></div>
+<main>
+    <div class="container">
+        <div class="corp">
+            <!-- Section Titres -->
+            <section class="mb-3">
+                <h1 >Titre de l'article <span class="text-secondary">(31/03/2015)</span></h1>
+                <h2 >Titre du paragraphe (niveau 2)</h2>
+                <h3 >Titre du paragraphe (niveau 3)</h3>
+                <h4 >Titre du paragraphe (niveau 4)</h4>
+                <h5 >Titre du paragraphe (niveau 5)</h5>
+                <h6 >Titre du paragraphe (niveau 6)</h6>
+            </section>
+
+            <!-- Section Texte -->
+            <section class="mb-3">
+                <p class="mb-2">
+                    Morbi quam ipsum, porta vel sodales in, luctus quis sapien.
+                    <a href="#" class="text-highlight" aria-label="Lien dans le paragraphe">Lien dans le paragraphe</a>.
+                    Proin imperdiet mauris non magna gravida fermentum.
+                </p>
+
+                <blockquote class="exergue mb-2" cite="#">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus at venenatis nisl.
+                </blockquote>
+
+                <p class="highlight mb-2">
+                    Mise en évidence : Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                </p>
+            </section>
+
+            <!-- Section Images -->
+            <section class="mb-3">
+                <figure class="image-float left">
+                    <img src="image-left-600x400.jpg"  width="600" height="400"  alt="Image flottante à gauche" loading="lazy" onerror="this.src='{{ asset('asset/default-image.jpg') }}'">
+                    <figcaption>Image flottante à gauche, Morbi quam ipsum, porta vel sodales in, luctus quis sapien.</figcaption>
+                </figure>
+
+                <figure class="image-float right">
+                    <img src="image-right-600x400.jpg"  width="600" height="400" alt="Image flottante à droite" loading="lazy" onerror="this.src='{{ asset('asset/default-image.jpg') }}'">
+                    <figcaption>Image flottante à droite, Morbi quam ipsum, porta vel sodales in, luctus quis sapien.</figcaption>
+                </figure>
+
+            
+                <img src="wide-image-1950x500.jpg" alt="Image large"  class="responsive-img mb-2" loading="lazy" onerror="this.src='{{ asset('asset/default-image.jpg') }}'">
+            </section>
+            <!-- Double bloc -->
+            <section class="double-block mb-3">
+                <img src="img-test-1920.jpg" alt="Bloc double" loading="lazy" onerror="this.src='{{ asset('asset/default-image.jpg') }}'">
+                <div class="content">
+                    <p class="mb-1">Duis laoreet fermentum mi sed auctor. Mauris a ante ut urna suscipit ornare sed a tellus.</p>
+                    <p>Sed gravida ultrices tincidunt. Sed elementum odio quis arcu vulputate venenatis.</p>
+                </div>
+            </section>
+
+            <!-- Tableau -->
+            <section class="mb-3">
+                <table>
+                    <caption class="mb-1">Titre du tableau</caption>
+                    <thead>
+                        <tr>
+                            <th>Colonne 1</th>
+                            <th>Colonne 2</th>
+                            <th>Colonne 3</th>
+                            <th>Colonne 4</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Contenu A</td>
+                            <td>Contenu long Donec id elit non mi porta gravida at eget metus.</td>
+                            <td>Contenu C</td>
+                            <td>Contenu D</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+
+            <!-- Formulaire-->
+            <form action="#" method="post" class="mb-3">
+                <div class="form-group">
+                    <label for="name">Nom :</label>
+                    <input type="text" id="name" name="name">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email :</label>
+                    <input type="email" id="email" name="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Message :</label>
+                    <textarea id="message" name="message"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Genre :</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="gender" value="male">
+                            <span>Homme</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="gender" value="female">
+                            <span>Femme</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="file">Fichier :</label>
+                    <input type="file" id="file" name="file">
+                </div>
+
+                <button type="submit" class="button-spe">Envoyer</button>
+            </form>
+
+            <!-- Boutons d'action -->
+            <div class="button-group mb-3">
+                <button class="button-spe" aria-label="Acheter maintenant">Acheter</button>
+                <button class="button-spe" aria-label="Ajouter au panier">Ajouter au panier</button>
+            </div>
+
+            <!-- Carrousel -->
+            <div class="carousel" aria-label="Carrousel d'images">
+                <button class="carousel-button  carousel-button-left" aria-label="Précédent">&larr;</button>
+                <div class="carousel-container">
+                    <div class="carousel-track">
+                    <div class="carousel-slide">
+                            <h2>Projet 1</h2>
+                            <p>Description du projet 1</p>
+                        </div>
+                        <div class="carousel-slide">
+                            <h2>Projet 2</h2>
+                            <p>Description du projet 2</p>
+                        </div>
+                        <div class="carousel-slide">
+                            <h2>Projet 3</h2>
+                            <p>Description du projet 3</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-button carousel-button-right" aria-label="Suivant">&rarr;</button>
+            </div>
+
+            <!-- Galerie -->
+            <div class="gallery-container">
+                <div class="main-image-container">
+                    <button id="bouton-l"  class="gallery-button gallery-button-left" aria-label="Image précédente">&larr;</button>
+                    <img src="{{ asset('asset/default-1.png') }}" alt="Image principale" loading="lazy" class="main-image" onerror="this.src='{{ asset('asset/default-1.png') }}'">
+                    <button id="bouton-r"  class="gallery-button gallery-button-right" aria-label="Image suivante">&rarr;</button>
+                </div>
+                <div class="thumbnails-container">
+                    <img src="{{ asset('asset/default-1.png') }}" alt="Vignette 1" loading="lazy" class="thumbnail active" onerror="this.src='{{ asset('asset/default-1.png') }}'">
+                    <img src="{{ asset('asset/default-2.webp') }}" alt="Vignette 2" loading="lazy" class="thumbnail" onerror="this.src='{{ asset('asset/default-2.webp') }}'">
+                    <img src="{{ asset('asset/default-3.jpg') }}" alt="Vignette 3" loading="lazy" class="thumbnail" onerror="this.src='{{ asset('asset/default-3.jpg') }}'">
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Scripts JavaScript -->
+<script src="{{ asset('js/scripts-header.js') }}" defer></script>
+<script src="{{ asset('js/scripts-carrousel.js') }}" defer></script>
+<script src="{{ asset('js/scripts-gallery.js') }}" defer></script>
+<script src="{{ asset('js/notification.js') }}" defer></script>
+<script>
+    // Attendre que le DOM et tous les scripts soient chargés
+    document.addEventListener('DOMContentLoaded', function() {
+        const images = [
+            '{{ asset('asset/default-1.png') }}',
+            '{{ asset('asset/default-2.webp') }}',
+            '{{ asset('asset/default-3.jpg') }}'
+        ];
+        const gallery = new ImageGallery(images);
+    });
+</script>
+
+    {% include '/components/foot.html.twig' %}
+    </body>
+</html>
