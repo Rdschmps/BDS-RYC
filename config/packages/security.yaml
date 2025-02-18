@@ -4,15 +4,10 @@ security:
             algorithm: auto
 
     providers:
-        users_in_memory:
-            memory:
-                users:
-                    admin@exemple.com:
-                        password: '$2y$13$8nih2IAJeSY2yYlWWHVW/eNlVInSMJq6zzc1Gbyje3vR5nZKnDC2S' # Mot de passe : admin
-                        roles: ['ROLE_ADMIN']
-                    user@exemple.com:
-                        password: '$2y$13$bAjdC3uTYhQgyztwh554uOjFo4GJPZ0rF06sAx8qw6ZzUj/EfW9Ci' # Mot de passe : user
-                        roles: ['ROLE_USER']
+        app_user_provider:  # ✅ Utilisation de la base de données comme provider
+            entity:
+                class: App\Entity\User  # ✅ On utilise l'entité User
+                property: email  # ✅ L'identifiant de connexion est l'email
 
     firewalls:
         dev:
@@ -21,18 +16,18 @@ security:
 
         main:
             lazy: true
-            provider: users_in_memory
+            provider: app_user_provider  # ✅ On utilise la base de données pour les utilisateurs
             custom_authenticator: App\Security\AppAuthenticator
             form_login:
-                login_path: login
-                check_path: login
+                login_path: app_login
+                check_path: app_login
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800 # 1 semaine
                 path: /
             logout:
-                path: /logout
-                target: /login
+                path: app_logout
+                target: app_login
             entry_point: App\Security\AppAuthenticator # ✅ Définit l'authenticator principal
 
     access_control:
