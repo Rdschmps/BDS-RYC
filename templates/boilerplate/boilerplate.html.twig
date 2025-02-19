@@ -164,12 +164,39 @@
                     <img src="{{ asset('asset/default-3.jpg') }}" alt="Vignette 3" loading="lazy" class="thumbnail" onerror="this.src='{{ asset('asset/default-3.jpg') }}'">
                 </div>
             </div>
+
+
+              <!-- Conteneur Produits -->
+           <section class="produits">
+                <div id="product-container" class="product-container">
+                    <div class="product-card">
+                        <img src="{{ asset('asset/default-image.jpg') }}" alt="image par default" loading="lazy" class="product-image" onerror="this.src='{{ asset('asset/default-image.jpg') }}'" />
+                        <h3>exemple test</h3>
+                        <p>25€</p>
+                        <p>dispo</p>
+                    </div>
+                    <div class="product-card">
+                        <img src="{{ asset('asset/default-image.jpg') }}" alt="image par default" loading="lazy" class="product-image" onerror="this.src='{{ asset('asset/default-image.jpg') }}'" />
+                        <h3>exemple test</h3>
+                        <p>25€</p>
+                        <p>dispo</p>
+                    </div>
+                   
+                
+                    <!-- Produits ajoutées dynamiquement ici -->
+                </div>
+                <div class="pagination">
+                    <button id="prev-btn" class="pagination-button" disabled>&laquo; Précédent</button>
+                    <button id="next-btn" class="pagination-button">Suivant &raquo;</button>
+                </div>
+            </section>
         </div>
     </div>
 </main>
 
 <!-- Scripts JavaScript -->
 <script src="{{ asset('js/scripts-header.js') }}" defer></script>
+<script src="{{ asset('js/scripts-pagination.js') }}" defer></script>
 <script src="{{ asset('js/scripts-carrousel.js') }}" defer></script>
 <script src="{{ asset('js/scripts-gallery.js') }}" defer></script>
 <script src="{{ asset('js/notification.js') }}" defer></script>

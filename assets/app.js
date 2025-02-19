@@ -13,3 +13,4 @@ import './js/scripts-carrousel.js';
 import './js/scripts-gallery.js';
 import './js/scripts-header.js';
 import './js/notification.js';
+import './js/scripts-pagination.js';

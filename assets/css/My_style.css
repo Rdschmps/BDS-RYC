@@ -281,7 +281,7 @@ main elem1 img {
     background-color: var(--Black);
     padding: var(--spacing-lg);
     border-radius: var(--border-radius-md);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-md);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -376,7 +376,7 @@ form {
     padding: var(--spacing-lg);
     border-radius: var(--border-radius-md);
     border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-md);
     margin: var(--spacing-xl);
     width: 100%;
 }
@@ -416,7 +416,7 @@ input, textarea, select {
 input:focus, textarea:focus, select:focus {
     outline: none;
     border-color: var(--color-second);
-    box-shadow: 0 0 5px var(--color-second);
+    box-shadow: var(--shadow-md);
 }
 
 /* Messages d'erreur */
@@ -565,7 +565,7 @@ input:focus, textarea:focus, select:focus {
     padding: 15px;
     margin-bottom: 10px;
     border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-md);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -582,4 +582,55 @@ input:focus, textarea:focus, select:focus {
     font-size: 16px;
     cursor: pointer;
     padding-left: 10px;
+}
+
+/*-------------------products-------------------------*/
+/* Conteneur des produits */
+.product-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-md);
+}
+/* Carte produit */
+.product-card {
+    background-color: var(--color-gray-200);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-sm);
+    box-shadow: var(--shadow-md);
+    transition: transform 0.3s ease-in-out;
+    text-align: left;
+}
+/* Image du produit */
+.product-image {
+    width: 100%;
+    height: auto; 
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-sm); 
+}
+.product-card:hover {
+    transform: scale(1.05);
+}
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+.pagination-button {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    transition: background-color var(--transition-fast);
+}
+.pagination-button:disabled {
+    background-color: var(--color-gray-300);
+    cursor: not-allowed;
+}
+.pagination-button:hover {
+    background-color: var(--color-second);
 }
