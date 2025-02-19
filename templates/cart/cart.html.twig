@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Panier{% endblock %}
+
+{% block body %}
+<h1>Mon Panier</h1>
+
+{% if products is empty %}
+    <p>Votre panier est vide.</p>
+    <a href="{{ path('home') }}" class="btn btn-primary">Retour à la boutique</a>
+{% else %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Produit</th>
+                <th>Prix</th>
+                <th>Quantité</th>
+                <th>Sous-total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in products %}
+                <tr>
+                    <td>
+                        <img src="{{ asset('images/' ~ item.product.image) }}" alt="Image produit" width="50">
+                    </td>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.product.price / 100 }} €</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.subtotal / 100 }} €</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Total : {{ total / 100 }} €</h3>
+
+    <a href="{{ path('checkout_page') }}" class="btn btn-success">Valider le panier et payer</a>
+{% endif %}
+{% endblock %}

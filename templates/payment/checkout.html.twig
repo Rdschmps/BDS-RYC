@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paiement{% endblock %}
+
+{% block body %}
+<h1>Page de Paiement</h1>
+
+<p>Montant total à payer : <strong>{{ total }} €</strong></p>
+
+<button id="payButton">Payer avec Stripe</button>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    document.getElementById('payButton').addEventListener('click', async () => {
+        const response = await fetch("{{ path('checkout') }}", { method: 'POST' });
+        const data = await response.json();
+        
+        if (data.id) {
+            const stripe = Stripe("{{ stripe_public_key }}");
+            stripe.redirectToCheckout({ sessionId: data.id });
+        } else {
+            alert("Erreur : " + data.error);
+        }
+    });
+</script>
+{% endblock %}
