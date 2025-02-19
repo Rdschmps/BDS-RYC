@@ -14,28 +14,7 @@
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
 
-        {% if app.user %}
-            <a href="{{ path('app_account') }}" class="btn btn-primary">Mon Compte</a>
-        {% else %}
-            <a href="{{ path('app_login') }}" class="btn btn-secondary">Connexion</a>
-        {% endif %}
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">Mon Site</a>
-                <div class="collapse navbar-collapse">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_articles_index') }}">Articles</a>
-                        </li>
-                        {% if is_granted('ROLE_ADMIN') %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ path('app_articles_new') }}">Ajouter un article</a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
-        </nav>
+       
     </head>
     <body>
         {% include 'components/header.html.twig' %}
