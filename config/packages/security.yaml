@@ -35,4 +35,5 @@ security:
         - { path: ^/user-dashboard, roles: ROLE_USER }
         - { path: ^/account, roles: ROLE_USER }
         - { path: ^/articles/admin, roles: ROLE_ADMIN }
-        - { path: ^/articles, roles: ROLE_USER }
+        
+        
