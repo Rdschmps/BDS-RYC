@@ -1,0 +1,2 @@
+php bin/phpunit     pour lancer les tests
+php bin/phpunit tests/Controller/PaymentControllerTest.php    pour un test unique
