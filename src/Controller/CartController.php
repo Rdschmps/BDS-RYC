@@ -2,16 +2,22 @@
 
 namespace App\Controller;
 
+use App\Entity\Cart;
+use App\Form\CartType;
+use App\Repository\CartRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use App\Service\CartService;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use App\Service\CartService;
 
-class CartController extends AbstractController
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+#[Route('/cart')]
+final class CartController extends AbstractController
 {
-    #[Route('/cart', name: 'cart_page')]
+    #[Route(name: 'cart_page', methods: ['GET'])]
     public function cart(CartService $cartService): Response
     {
         $useFakeData = true; // Active les données fictives
@@ -50,10 +56,66 @@ class CartController extends AbstractController
         ]);
     }
 
+    #[Route('/new', name: 'app_cart_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $cart = new Cart();
+        $form = $this->createForm(CartType::class, $cart);
+        $form->handleRequest($request);
 
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($cart);
+            $entityManager->flush();
 
+            return $this->redirectToRoute('app_cart_index', [], Response::HTTP_SEE_OTHER);
+        }
 
+        return $this->render('cart/new.html.twig', [
+            'cart' => $cart,
+            'form' => $form,
+        ]);
+    }
 
+    #[Route('/{id}', name: 'app_cart_show', methods: ['GET'])]
+    public function show(Cart $cart): Response
+    {
+        return $this->render('cart/show.html.twig', [
+            'cart' => $cart,
+        ]);
+    }
+
+    #[Route('/{id}/edit', name: 'app_cart_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Cart $cart, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(CartType::class, $cart);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_cart_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('cart/edit.html.twig', [
+            'cart' => $cart,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}', name: 'app_cart_delete', methods: ['POST'])]
+    public function delete(Request $request, Cart $cart, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$cart->getId(), $request->getPayload()->getString('_token'))) {
+            $entityManager->remove($cart);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_cart_index', [], Response::HTTP_SEE_OTHER);
+    }
+    
+    
+    
+    
     #[Route('/add-to-cart/{id}', name: 'add_to_cart', methods: ['GET'])]
     public function addToCart(int $id, CartService $cartService): RedirectResponse
     {

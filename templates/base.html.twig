@@ -10,6 +10,15 @@
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
+
+
+
+        {% if app.user %}
+            <a href="{{ path('app_account') }}" class="btn btn-primary">Mon Compte</a>
+        {% else %}
+            <a href="{{ path('app_login') }}" class="btn btn-secondary">Connexion</a>
+        {% endif %}
+
     </head>
     <body>
         {% block body %}{% endblock %}
