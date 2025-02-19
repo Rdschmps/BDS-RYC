@@ -12,21 +12,23 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use DateTimeImmutable;
 
-  
-
 #[Route('/articles')]
 class ArticleController extends AbstractController
 {
-    //  Affichage des articles pour les clients (ROLE_USER)
+    // 🔹 Affichage des articles pour les clients (ROLE_USER et ROLE_ADMIN)
     #[Route('/', name: 'app_articles_index', methods: ['GET'])]
     public function index(ArticleRepository $articleRepository): Response
     {
+        // Vérification que l'utilisateur est bien connecté
+        
+
+
         return $this->render('article/index.html.twig', [
             'articles' => $articleRepository->findAll(),
         ]);
     }
 
-    // Affichage d'un article spécifique
+    // 🔹 Affichage d'un article spécifique
     #[Route('/{id}', name: 'app_articles_show', methods: ['GET'])]
     public function show(Article $article): Response
     {
@@ -35,16 +37,22 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    // Création d'un article (ROLE_ADMIN)
+    // 🔹 Création d'un article (ROLE_ADMIN)
     #[Route('/admin/new', name: 'app_articles_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Vérification que l'utilisateur est ADMIN
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $article = new Article();
-        $article->setAuthor($this->getUser());
-        $article->setPublishedAt(new DateTimeImmutable()); // ✅ Ajout ici
+        
+        // Vérifier que l'utilisateur est connecté avant d'affecter l'auteur
+        $user = $this->getUser();
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour ajouter un article.');
+        }
+        
+        $article->setAuthor($user);
+        $article->setPublishedAt(new DateTimeImmutable());
 
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
@@ -62,12 +70,10 @@ class ArticleController extends AbstractController
         ]);
     }
 
-
-    // Modification d'un article (ROLE_ADMIN)
+    // 🔹 Modification d'un article (ROLE_ADMIN)
     #[Route('/admin/{id}/edit', name: 'app_articles_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Article $article, EntityManagerInterface $entityManager): Response
     {
-        // Vérification que l'utilisateur est ADMIN
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $form = $this->createForm(ArticleType::class, $article);
@@ -85,11 +91,10 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    //  Suppression d'un article (ROLE_ADMIN)
+    // 🔹 Suppression d'un article (ROLE_ADMIN)
     #[Route('/admin/{id}/delete', name: 'app_articles_delete', methods: ['POST'])]
     public function delete(Request $request, Article $article, EntityManagerInterface $entityManager): Response
     {
-        // Vérification que l'utilisateur est ADMIN
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         if ($this->isCsrfTokenValid('delete' . $article->getId(), $request->get('_token'))) {
