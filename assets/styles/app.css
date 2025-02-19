@@ -1,4 +1,5 @@
-@import url('./../css/normalize.css');
-@import url('./../css/My_style.css');
-@import url('./../css/styles-carrousel.css');
-@import url('./../css/styles-gallery.css');
+@import "tailwindcss";
+
+.custom-bg {
+    @apply bg-[#254B74];
+}

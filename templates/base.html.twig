@@ -5,23 +5,20 @@
         <title>{% block title %}Welcome!{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
         {% endblock %}
 
         {% block javascripts %}
+
             {% block importmap %}{{ importmap('app') }}{% endblock %}
+            {{ encore_entry_script_tags('app') }}
         {% endblock %}
-
-
 
         {% if app.user %}
             <a href="{{ path('app_account') }}" class="btn btn-primary">Mon Compte</a>
         {% else %}
             <a href="{{ path('app_login') }}" class="btn btn-secondary">Connexion</a>
         {% endif %}
-
-
-
-
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">Mon Site</a>
@@ -39,10 +36,11 @@
                 </div>
             </div>
         </nav>
-        
-
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {% include 'components/header.html.twig' %}
+
+        {% block body %}
+        {% endblock %}
     </body>
 </html>

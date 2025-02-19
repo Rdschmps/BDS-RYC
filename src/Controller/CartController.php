@@ -113,9 +113,6 @@ final class CartController extends AbstractController
         return $this->redirectToRoute('app_cart_index', [], Response::HTTP_SEE_OTHER);
     }
     
-    
-    
-    
     #[Route('/add-to-cart/{id}', name: 'add_to_cart', methods: ['GET'])]
     public function addToCart(int $id, CartService $cartService): RedirectResponse
     {
