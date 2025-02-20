@@ -11,24 +11,22 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use DateTimeImmutable;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 #[Route('/articles')]
 class ArticleController extends AbstractController
 {
-    // 🔹 Affichage des articles pour les clients (ROLE_USER et ROLE_ADMIN)
+    // 🔹 Affichage des articles pour tous (PUBLIC)
     #[Route('/', name: 'app_articles_index', methods: ['GET'])]
     public function index(ArticleRepository $articleRepository): Response
     {
-        // Vérification que l'utilisateur est bien connecté
-        
-
-
         return $this->render('article/index.html.twig', [
             'articles' => $articleRepository->findAll(),
         ]);
     }
 
-    // 🔹 Affichage d'un article spécifique
+    // 🔹 Affichage d'un article spécifique (PUBLIC)
     #[Route('/{id}', name: 'app_articles_show', methods: ['GET'])]
     public function show(Article $article): Response
     {
@@ -44,13 +42,13 @@ class ArticleController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $article = new Article();
-        
-        // Vérifier que l'utilisateur est connecté avant d'affecter l'auteur
+
+        // Vérifie si l'utilisateur est connecté avant d'affecter l'auteur
         $user = $this->getUser();
         if (!$user) {
             throw $this->createAccessDeniedException('Vous devez être connecté pour ajouter un article.');
         }
-        
+
         $article->setAuthor($user);
         $article->setPublishedAt(new DateTimeImmutable());
 
@@ -58,6 +56,24 @@ class ArticleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            /** @var UploadedFile $imageFile */
+            $imageFile = $form->get('image')->getData();
+
+            if ($imageFile) {
+                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
+
+                try {
+                    $imageFile->move(
+                        $this->getParameter('articles_directory'), // Dossier configuré dans services.yaml
+                        $newFilename
+                    );
+                    $article->setImageUrl($newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash('error', 'Erreur lors de l\'upload de l\'image.');
+                }
+            }
+
             $entityManager->persist($article);
             $entityManager->flush();
 
@@ -80,8 +96,25 @@ class ArticleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
 
+            /** @var UploadedFile $imageFile */
+            $imageFile = $form->get('image')->getData();
+
+            if ($imageFile) {
+                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
+
+                try {
+                    $imageFile->move(
+                        $this->getParameter('articles_directory'),
+                        $newFilename
+                    );
+                    $article->setImageUrl($newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash('error', 'Erreur lors de l\'upload de l\'image.');
+                }
+            }
+
+            $entityManager->flush();
             return $this->redirectToRoute('app_articles_index');
         }
 

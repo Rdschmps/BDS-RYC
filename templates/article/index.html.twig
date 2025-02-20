@@ -10,7 +10,9 @@
         {% for article in articles %}
             <div class="bg-white shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:scale-105">
                 <a href="{{ path('app_articles_show', {'id': article.id}) }}">
-                    <img src="{{ article.imageUrl ?: asset('asset/default-image.jpg') }}" 
+                    
+                    {# Vérification et affichage de l'image de l'article #}
+                    <img src="{{ article.imageUrl ? asset('uploads/articles/' ~ article.imageUrl) : asset('assets/default-image.jpg') }}" 
                          alt="{{ article.name }}" 
                          class="w-full h-64 object-cover"
                          onerror="this.src='{{ asset('asset/default-image.jpg') }}'"/>
@@ -22,9 +24,9 @@
                         <p class="mt-2">
                             <strong class="text-gray-700">Disponibilité :</strong> 
                             {% if article.stock and article.stock.quantity > 0 %}
-                                <span class="text-green-600 font-semibold">Available</span>
+                                <span class="text-green-600 font-semibold">Disponible</span>
                             {% else %}
-                                <span class="text-red-600 font-semibold">Not Available</span>
+                                <span class="text-red-600 font-semibold">Indisponible</span>
                             {% endif %}
                         </p>
                     </div>
