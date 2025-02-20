@@ -1,9 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
-<h1>Validation du panier</h1>
+{% block title %}Validation du Panier{% endblock %}
 
-<button id="checkout-button">Payer avec Stripe</button>
+{% block body %}
+<div class="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-4">
+    <div class="bg-white shadow-lg rounded-lg p-6 max-w-md w-full text-center animate-fadeIn">
+        <div class="flex items-center justify-center bg-blue-100 w-20 h-20 rounded-full mb-4">
+            <svg class="w-12 h-12 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l1 5h13l1-5h2"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13h14M10 17h4M7 21h10"></path>
+            </svg>
+        </div>
+
+        <h1 class="text-2xl font-bold text-gray-800">🛒 Validation du panier</h1>
+        <p class="text-gray-600 mt-2">Cliquez sur le bouton ci-dessous pour procéder au paiement sécurisé.</p>
+
+        <button id="checkout-button" 
+                class="mt-6 bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold shadow-md hover:bg-blue-700 transition duration-300">
+            💳 Payer avec Stripe
+        </button>
+    </div>
+</div>
 
 <script src="https://js.stripe.com/v3/"></script>
 <script>
@@ -16,4 +33,14 @@
             .catch(error => console.error("Erreur:", error));
     });
 </script>
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn {
+        animation: fadeIn 0.6s ease-out;
+    }
+</style>
 {% endblock %}

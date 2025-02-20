@@ -43,4 +43,53 @@
     <a href="{{ path('app_article_edit', {'id': article.id}) }}">edit</a>
 
     {{ include('article/_delete_form.html.twig') }}
+<div class="container mx-auto max-w-xl px-4 py-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-4 text-center">{{ article.name }}</h1>
+
+    <!-- Image du produit -->
+    <div class="mb-6">
+        <img src="{{ article.imageUrl ? asset('uploads/articles/' ~ article.imageUrl) : asset('assets/default-image.jpg') }}" 
+                         alt="{{ article.name }}" 
+                         class=" h-64 object-cover  object-cover transition-opacity duration-300 hover:opacity-90"
+                         onerror="this.src='{{ asset('asset/default-image.jpg') }}'"/>
+    </div>
+
+    <!-- Description -->
+    <p class="text-gray-700 text-lg mb-4">{{ article.description }}</p>
+
+    <!-- Prix & Disponibilité -->
+    <p class="text-xl font-semibold text-gray-900 mb-2">💰 Prix : <span class="text-indigo-600">{{ article.price }} €</span></p>
+
+    <p class="text-lg">
+        📦 <span class="font-medium text-gray-700">Disponibilité :</span> 
+        {% if article.stock and article.stock.quantity > 0 %}
+            <span class="text-green-600 font-bold">Disponible</span>
+        {% else %}
+            <span class="text-red-600 font-bold">Indisponible</span>
+        {% endif %}
+    </p>
+    <a href="/cart/add-to-cart/{{ article.id }}" class="block text-center bg-indigo-600 text-black px-2 py-1 rounded-lg font-semibold shadow-md hover:bg-indigo-700 active:scale-95 transition-all ease-in-out duration-300"> 🛍️ Ajouter au panier </a>
+
+    <!-- Boutons d'actions -->
+    <div class="mt-6 flex flex-wrap gap-4">
+        <a href="{{ path('app_articles_index') }}" 
+           class="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-600 transition">
+            ⬅️ Retour
+        </a>
+
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_articles_edit', {'id': article.id}) }}" 
+               class="bg-yellow-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-yellow-600 transition">
+                ✏️ Modifier
+            </a>
+            <form action="{{ path('app_articles_delete', {'id': article.id}) }}" method="post" class="inline">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ article.id) }}">
+                <button type="submit" 
+                        class="bg-red-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-600 transition">
+                    ❌ Supprimer
+                </button>
+            </form>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
