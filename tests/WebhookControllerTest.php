@@ -1,4 +1,20 @@
 <?php
+<<<<<<< HEAD
+/**
+ * Lancement du test PHPUnit
+ * Commandes utiles :
+ *   php bin/phpunit
+ *   stripe logs tail
+ *   checkout.session.completed
+ *   payment_intent.failed
+ *   charge.refunded
+ */
+ 
+namespace App\Tests\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+
+=======
 /** lancement du test php bin/phpunit```php
  * php bin/phpunit
  * stripe logs tail
@@ -10,6 +26,7 @@
 
 namespace App\Tests\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+>>>>>>> main
 class WebhookControllerTest extends WebTestCase
 {
     public function testWebhook()
@@ -28,8 +45,15 @@ class WebhookControllerTest extends WebTestCase
                 ],
             ],
         ]);
+<<<<<<< HEAD
+        
         // Envoi de la requête au webhook
         $client->request('POST', '/webhook', [], [], ['CONTENT_TYPE' => 'application/json'], $fakeEvent);
+        
+=======
+        // Envoi de la requête au webhook
+        $client->request('POST', '/webhook', [], [], ['CONTENT_TYPE' => 'application/json'], $fakeEvent);
+>>>>>>> main
         // Vérifier si le statut de la réponse HTTP est 200
         $this->assertResponseIsSuccessful();
         
@@ -39,4 +63,8 @@ class WebhookControllerTest extends WebTestCase
             $client->getResponse()->getContent()
         );
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> main

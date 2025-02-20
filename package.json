@@ -22,10 +22,21 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+<<<<<<< HEAD
         "@fortawesome/fontawesome-free": "^6.7.2",
         "@tailwindcss/postcss": "^4.0.7",
         "postcss": "^8.5.3",
         "postcss-loader": "^8.1.1",
         "tailwindcss": "^4.0.7"
     }
+=======
+     "@tailwindcss/postcss": "^4.0.7",
+     "autoprefixer": "^10.4.20",
+     "postcss": "^8.5.3",
+     "postcss-loader": "^8.1.1",
+     "tailwindcss": "^4.0.7"
+ }
+
+
+>>>>>>> front
 }

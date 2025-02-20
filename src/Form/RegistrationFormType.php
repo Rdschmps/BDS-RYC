@@ -28,10 +28,8 @@ class RegistrationFormType extends AbstractType
                 'first_options' => ['label' => 'Mot de passe'],
                 'second_options' => ['label' => 'Confirmer le mot de passe'],
                 'mapped' => false,
-            ])
-            ->add('submit', SubmitType::class, [
-                'label' => 'S\'inscrire',
             ]);
+            
     }
 
     public function configureOptions(OptionsResolver $resolver): void
