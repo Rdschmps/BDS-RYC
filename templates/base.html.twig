@@ -1,25 +1,56 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
-
-        {% block javascripts %}
-
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-
-       
+        {% include 'components/head.html.twig' %}
     </head>
-    <body>
+    <body class="bg-gray-100 min-h-screen flex flex-col"> 
         {% include 'components/header.html.twig' %}
 
         {% block body %}
+        <div class="flex flex-col items-center space-y-8 w-full"> 
+
+            <section id="Image-Container" class="flex flex-wrap md:flex-nowrap">
+                <img id="image1" src="{{ homepageImages.image1 ? asset('uploads/homepage/' ~ homepageImages.image1) }}" 
+                     alt="Image 1" class="w-1/2 md:w-1/2 h-[800px] md:h-[800px] object-cover">
+                
+                <img id="image2" src="{{ homepageImages.image2 ? asset('uploads/homepage/' ~ homepageImages.image2)  }}" 
+                     alt="Image 2" class="w-1/2 md:w-1/2 h-[800px] md:h-[800px] object-cover">
+            </section>
+        </div>
+
+        {% include 'components/footer.html.twig' %}
         {% endblock %}
     </body>
+
+    <script>
+        function setImageSize() {
+            const screenWidth = window.innerWidth;
+            const image1 = document.getElementById("image1");
+            const image2 = document.getElementById("image2");
+
+            if (screenWidth < 768) { 
+                // Mobile : pleine largeur et hauteur proportionnelle
+                const mobileHeight = Math.round(window.innerHeight * 0.5);
+                image1.style.width = "100%";
+                image2.style.width = "100%";
+                image1.style.height = `${mobileHeight}px`;
+                image2.style.height = `${mobileHeight}px`;
+
+                //image1.src = `https://picsum.photos/${screenWidth}/${mobileHeight}`;
+                //image2.src = `https://picsum.photos/${screenWidth}/${mobileHeight}`;
+            } else { 
+                // Desktop : 50% de largeur, 800px de hauteur
+                image1.style.width = "50%";
+                image2.style.width = "50%";
+                image1.style.height = "800px";
+                image2.style.height = "800px";
+
+                //image1.src = `https://picsum.photos/${screenWidth / 2}/800`;
+                //image2.src = `https://picsum.photos/${screenWidth / 2}/800`;
+            }
+        }
+
+        window.onload = setImageSize;
+        window.onresize = setImageSize;
+    </script>
 </html>

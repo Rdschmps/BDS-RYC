@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier les images de la homepage{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1 class="my-4">Modifier les images de la homepage</h1>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+
+    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+        <div class="mb-3">
+            {{ form_label(form.image1, 'Image 1') }}
+            {{ form_widget(form.image1, { 'attr': {'class': 'form-control'} }) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.image2, 'Image 2') }}
+            {{ form_widget(form.image2, { 'attr': {'class': 'form-control'} }) }}
+        </div>
+
+        <button type="submit" class="btn btn-success">Mettre à jour</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('home') }}" class="btn btn-secondary mt-3">Retour</a>
+</div>
+{% endblock %}

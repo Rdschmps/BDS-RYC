@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Cart;
+use App\Entity\Article;
 use App\Form\CartType;
 use App\Repository\CartRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,32 +20,54 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 #[Route('/cart')]
 final class CartController extends AbstractController
 {
-    #[Route(name: 'cart_page', methods: ['GET'])]
+    #[Route('/', name: 'app_cart_index', methods: ['GET'])]
     public function cart(CartService $cartService, ArticleRepository $articleRepository): Response
     {
+        $useFakeData = false; // Active les données fictives 
         $cart = $cartService->getCart();
-        $products = [];
+        $articles = [];
         $total = 0;
-
-        foreach ($cart as $productId => $quantity) {
-            // 🔹 Récupérer le produit depuis la base de données
-            $product = $articleRepository->find($productId);
-
-            if ($product) {
-                $products[] = [
-                    'product' => $product,
+    
+        foreach ($cart as $articleId => $quantity) {
+            if ($useFakeData) {
+                // Produit fictif (sans base de données)
+                $article = [
+                    'id' => $articleId,
+                    'name' => "Article $articleId",
+                    'price' => 1000, // 10€
+                    'imageUrl' => 'assets/default-image.jpg',
                     'quantity' => $quantity,
-                    'subtotal' => $product->getPrice() * $quantity
+                    'subtotal' => 1000 * $quantity
                 ];
-                $total += $product->getPrice() * $quantity;
+                $articles[] = $article;
+                $total += $article['subtotal'];
+            } else {
+                $article = $articleRepository->find($articleId);
+    
+                if ($article) {
+                    $imageUrl = $article->getImageUrl() ? 'uploads/articles/' . $article->getImageUrl() : 'assets/default-image.jpg';
+    
+                    $articles[] = [
+                        'id' => $article->getId(),
+                        'name' => $article->getName(),
+                        'price' => $article->getPrice(),
+                        'imageUrl' => $imageUrl,
+                        'quantity' => $quantity,
+                        'subtotal' => $article->getPrice() * $quantity
+                    ];
+                    
+                    $total += $article->getPrice() * $quantity;
+                }
             }
         }
-
+    
         return $this->render('cart/cart.html.twig', [
-            'products' => $products,
+            'articles' => $articles,
             'total' => $total
         ]);
     }
+    
+
 
 
     #[Route('/new', name: 'app_cart_new', methods: ['GET', 'POST'])]
@@ -96,7 +119,7 @@ final class CartController extends AbstractController
     #[Route('/{id}', name: 'app_cart_delete', methods: ['POST'])]
     public function delete(Request $request, Cart $cart, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$cart->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $cart->getId(), $request->request->get('_token'))) {
             $entityManager->remove($cart);
             $entityManager->flush();
         }
@@ -105,10 +128,16 @@ final class CartController extends AbstractController
     }
     
     #[Route('/add-to-cart/{id}', name: 'add_to_cart', methods: ['GET'])]
-    public function addToCart(int $id, CartService $cartService): RedirectResponse
+    public function addToCart(int $id, CartService $cartService, ArticleRepository $articleRepository): RedirectResponse
     {
+        $article = $articleRepository->find($id);
+
+        if (!$article) {
+            throw $this->createNotFoundException('Article non trouvé.');
+        }
+
         $cartService->addToCart($id, 1);
 
-        return $this->redirectToRoute('cart_page');
+        return $this->redirectToRoute('app_cart_index');
     }
 }
