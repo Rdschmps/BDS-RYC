@@ -8,11 +8,11 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {% for article in articles %}
-            <div class="bg-white shadow-lg rounded-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 w-[100px] h-[100px]">
+            <div class="bg-white shadow-lg rounded-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 w-[500px] h-[500px]">
                 <a href="{{ path('app_articles_show', {'id': article.id}) }}">
-                    <img src="{{ article.imageUrl ?: asset('asset/default-image.jpg') }}" 
+                    <img src="{{ article.imageUrl ? asset('uploads/articles/' ~ article.imageUrl) : asset('assets/default-image.jpg') }}" 
                          alt="{{ article.name }}" 
-                         class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-90"
+                         class=" h-64 object-cover  object-cover transition-opacity duration-300 hover:opacity-90"
                          onerror="this.src='{{ asset('asset/default-image.jpg') }}'"/>
 
                     <div class="p-2 bg-gray-50">
