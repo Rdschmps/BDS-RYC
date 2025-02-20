@@ -23,8 +23,13 @@
             {% for item in products %}
                 <tr>
                     <td>
-                        <img src="{{ asset('images/' ~ item.product.image) }}" alt="Image produit" width="50">
+                        <img src="{{ item.product.imageUrl ? asset('uploads/articles/' ~ item.product.imageUrl) : asset('assets/default-image.jpg') }}" 
+                             alt="{{ item.product.name }}" 
+                             class="w-32 h-32 object-cover mx-auto rounded-md"
+                             onerror="this.src='{{ asset('assets/default-image.jpg') }}'"/>
                     </td>
+                    
+                    
                     <td>{{ item.product.name }}</td>
                     <td>{{ item.product.price / 100 }} €</td>
                     <td>{{ item.quantity }}</td>

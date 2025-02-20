@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Service\CartService;
+use App\Repository\ArticleRepository;
+
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -18,35 +20,23 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 final class CartController extends AbstractController
 {
     #[Route(name: 'cart_page', methods: ['GET'])]
-    public function cart(CartService $cartService): Response
+    public function cart(CartService $cartService, ArticleRepository $articleRepository): Response
     {
-        $useFakeData = true; // Active les données fictives
-        
         $cart = $cartService->getCart();
         $products = [];
         $total = 0;
 
         foreach ($cart as $productId => $quantity) {
-            if ($useFakeData) {
-                // Produit fictif (sans base de données)
-                $product = [
-                    'id' => $productId,
-                    'name' => "Produit $productId",
-                    'price' => 1000, // 10€
-                    'image' => 'default-image.jpg'
-                ];
-            } else {
-                // Normalement, récupération depuis la base de données
-                $product = $productRepository->find($productId);
-            }
+            // 🔹 Récupérer le produit depuis la base de données
+            $product = $articleRepository->find($productId);
 
             if ($product) {
                 $products[] = [
                     'product' => $product,
                     'quantity' => $quantity,
-                    'subtotal' => $product['price'] * $quantity
+                    'subtotal' => $product->getPrice() * $quantity
                 ];
-                $total += $product['price'] * $quantity;
+                $total += $product->getPrice() * $quantity;
             }
         }
 
@@ -55,6 +45,7 @@ final class CartController extends AbstractController
             'total' => $total
         ]);
     }
+
 
     #[Route('/new', name: 'app_cart_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
