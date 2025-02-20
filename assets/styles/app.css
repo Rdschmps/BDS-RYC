@@ -1,3 +1,6 @@
-body {
-    background-color: skyblue;
+
+@import "tailwindcss";
+
+.custom-bg {
+    @apply bg-[#254B74];
 }

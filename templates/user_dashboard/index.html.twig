@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espace Utilisateur{% endblock %}
+
+{% block body %}
+    <h1>Bienvenue sur votre espace utilisateur !</h1>
+    
+    <p>Vous êtes connecté en tant que {{ app.user.userIdentifier }}</p>
+
+    <ul>
+        <li><a href="/">Accueil</a></li>
+        <li><a href="/logout">Se déconnecter</a></li>
+    </ul>
+{% endblock %}

@@ -23,7 +23,10 @@
     },
     "dependencies": {
         "@tailwindcss/postcss": "^4.0.7",
+<<<<<<< HEAD
         "autoprefixer": "^10.4.20",
+=======
+>>>>>>> main
         "postcss": "^8.5.3",
         "postcss-loader": "^8.1.1",
         "tailwindcss": "^4.0.7"
