@@ -3,41 +3,39 @@
 {% block title %}Liste des Articles{% endblock %}
 
 {% block body %}
-<div class="container mx-auto px-4 py-6">
-    <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Liste des Articles</h1>
+<div class="container mx-auto max-w-screen-xl px-4 py-10">
+    <h1 class="text-4xl font-extrabold text-center text-gray-900 mb-10">🛒 Nos Articles</h1>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {% for article in articles %}
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:scale-105">
+            <div class="bg-white shadow-lg rounded-2xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 w-[100px] h-[100px]">
                 <a href="{{ path('app_articles_show', {'id': article.id}) }}">
                     <img src="{{ article.imageUrl ?: asset('asset/default-image.jpg') }}" 
                          alt="{{ article.name }}" 
-                         class="w-full h-64 object-cover"
+                         class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-90"
                          onerror="this.src='{{ asset('asset/default-image.jpg') }}'"/>
 
-                    <div class="p-4">
-                        <h4 class="text-lg font-semibold text-gray-900">{{ article.name }}</h4>
-                        <p class="text-gray-600 font-medium mt-2">Prix : <span class="text-indigo-600 font-bold">{{ article.price }} €</span></p>
-
+                    <div class="p-2 bg-gray-50">
+                        <h4 class="text-sm font-semibold text-gray-900">{{ article.name }}</h4>
+                        <p class="text-xs text-gray-700 mt-1">💰 <span class="font-bold text-indigo-600">{{ article.price }} €</span></p>
                         <p class="mt-2">
-                            <strong class="text-gray-700">Disponibilité :</strong> 
                             {% if article.stock and article.stock.quantity > 0 %}
-                                <span class="text-green-600 font-semibold">Available</span>
+                                <span class="text-green-600 font-bold">Disponible</span>
                             {% else %}
-                                <span class="text-red-600 font-semibold">Not Available</span>
+                                <span class="text-red-600 font-bold">Indisponible</span>
                             {% endif %}
                         </p>
                     </div>
                 </a>
-                <div class="p-4">
+                <div class="p-2 bg-white">
                     <a href="/cart/add-to-cart/{{ article.id }}"
-                       class="block text-center bg-indigo-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-indigo-700 transition duration-300">
-                        Ajouter au panier
+                       class="block text-center bg-indigo-600 text-black px-2 py-1 rounded-lg font-semibold shadow-md hover:bg-indigo-700 active:scale-95 transition-all ease-in-out duration-300">
+                       🛍️ Ajouter au panier
                     </a>
                 </div>
             </div>
         {% else %}
-            <p class="text-center text-gray-500 col-span-full">Aucun article disponible.</p>
+            <p class="text-center text-gray-500 col-span-full text-lg">😢 Aucun article disponible pour le moment.</p>
         {% endfor %}
     </div>
 </div>
