@@ -1,44 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des Articles{% endblock %}
+{% block title %}Article index{% endblock %}
 
 {% block body %}
-<div class="container mx-auto px-4 py-6">
-    <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Liste des Articles</h1>
+    <h1>Article index</h1>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Image_url</th>
+                <th>Published_at</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
         {% for article in articles %}
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:scale-105">
-                <a href="{{ path('app_articles_show', {'id': article.id}) }}">
-                    <img src="{{ article.imageUrl ?: asset('asset/default-image.jpg') }}" 
-                         alt="{{ article.name }}" 
-                         class="w-full h-64 object-cover"
-                         onerror="this.src='{{ asset('asset/default-image.jpg') }}'"/>
-
-                    <div class="p-4">
-                        <h4 class="text-lg font-semibold text-gray-900">{{ article.name }}</h4>
-                        <p class="text-gray-600 font-medium mt-2">Prix : <span class="text-indigo-600 font-bold">{{ article.price }} €</span></p>
-
-                        <p class="mt-2">
-                            <strong class="text-gray-700">Disponibilité :</strong> 
-                            {% if article.stock and article.stock.quantity > 0 %}
-                                <span class="text-green-600 font-semibold">Available</span>
-                            {% else %}
-                                <span class="text-red-600 font-semibold">Not Available</span>
-                            {% endif %}
-                        </p>
-                    </div>
-                </a>
-                <div class="p-4">
-                    <a href="/cart/add-to-cart/{{ article.id }}"
-                       class="block text-center bg-indigo-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-indigo-700 transition duration-300">
-                        Ajouter au panier
-                    </a>
-                </div>
-            </div>
+            <tr>
+                <td>{{ article.id }}</td>
+                <td>{{ article.name }}</td>
+                <td>{{ article.description }}</td>
+                <td>{{ article.price }}</td>
+                <td>{{ article.quantity }}</td>
+                <td>{{ article.imageUrl }}</td>
+                <td>{{ article.publishedAt ? article.publishedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_article_show', {'id': article.id}) }}">show</a>
+                    <a href="{{ path('app_article_edit', {'id': article.id}) }}">edit</a>
+                </td>
+            </tr>
         {% else %}
-            <p class="text-center text-gray-500 col-span-full">Aucun article disponible.</p>
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
         {% endfor %}
-    </div>
-</div>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_article_new') }}">Create new</a>
 {% endblock %}
