@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Service\CartService;
-use App\Repository\ProductRepository;
+use App\Repository\ArticleRepository;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,43 +14,43 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PaymentController extends AbstractController
 {
-    private bool $useMockData = true; // Mettre à "false" quand la BDD sera prête
+    private bool $useMockData = false; // Mettre à "false" quand la BDD sera prête
 
     /**
      * Affiche la page de validation du panier et du paiement
      */
     #[Route('/checkout', name: 'checkout_page', methods: ['GET'])]
-    public function checkoutPage(CartService $cartService, ProductRepository $productRepository): Response
+    public function checkoutPage(CartService $cartService, ArticleRepository $articleRepository): Response
     {
         $cart = $cartService->getCart();
         $total = 0;
         $cartItems = [];
 
-        foreach ($cart as $productId => $quantity) {
+        foreach ($cart as $articleId => $quantity) {
             if ($this->useMockData) {
                 // Valeurs par défaut si pas de BDD
-                $product = [
-                    'id' => $productId,
-                    'name' => "Produit #$productId",
+                $article = [
+                    'id' => $articleId,
+                    'name' => "Produit #$articleId",
                     'price' => 10.00, // 10€ par défaut
                     'image' => 'default-image.jpg'
                 ];
             } else {
-                $product = $productRepository->find($productId);
-                if (!$product) {
+                $article = $articleRepository->find($articleId);
+                if (!$article) {
                     continue;
                 }
-                $product = [
-                    'id' => $product->getId(),
-                    'name' => $product->getName(),
-                    'price' => $product->getPrice(),
-                    'image' => $product->getImage() ?? 'default-image.jpg'
+                $article = [
+                    'id' => $article->getId(),
+                    'name' => $article->getName(),
+                    'price' => $article->getPrice(),
+                    'image' => $article->getImageUrl() ?? 'default-image.jpg'
                 ];
             }
 
-            $total += $product['price'] * $quantity;
+            $total += $article['price'] * $quantity;
             $cartItems[] = [
-                'product' => $product,
+                'product' => $article,
                 'quantity' => $quantity
             ];
         }
@@ -65,7 +65,7 @@ class PaymentController extends AbstractController
      * Initialise le paiement Stripe et renvoie une session
      */
     #[Route('/checkout-session', name: 'checkout', methods: ['POST'])]
-    public function checkout(CartService $cartService, ProductRepository $productRepository): JsonResponse
+    public function checkout(CartService $cartService, ArticleRepository $articleRepository): JsonResponse
     {
         Stripe::setApiKey($this->getParameter('stripe_secret_key'));
 
@@ -75,20 +75,20 @@ class PaymentController extends AbstractController
         }
 
         $lineItems = [];
-        foreach ($cart as $productId => $quantity) {
+        foreach ($cart as $articleId => $quantity) {
             if ($this->useMockData) {
-                $product = [
-                    'name' => "Produit #$productId",
+                $article = [
+                    'name' => "Produit #$articleId",
                     'price' => 10.00 // 10€ par défaut
                 ];
             } else {
-                $product = $productRepository->find($productId);
-                if (!$product) {
+                $article = $articleRepository->find($articleId);
+                if (!$article) {
                     continue;
                 }
-                $product = [
-                    'name' => $product->getName(),
-                    'price' => $product->getPrice()
+                $article = [
+                    'name' => $article->getName(),
+                    'price' => $article->getPrice()
                 ];
             }
 
@@ -96,9 +96,9 @@ class PaymentController extends AbstractController
                 'price_data' => [
                     'currency' => 'eur',
                     'product_data' => [
-                        'name' => $product['name'],
+                        'name' => $article['name'],
                     ],
-                    'unit_amount' => $product['price'] * 100, // Prix en centimes
+                    'unit_amount' => $article['price'] * 100, // Prix en centimes
                 ],
                 'quantity' => $quantity,
             ];

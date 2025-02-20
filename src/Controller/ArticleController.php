@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use DateTimeImmutable;
 
+
 #[Route('/articles')]
 class ArticleController extends AbstractController
 {
