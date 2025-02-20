@@ -36,7 +36,7 @@ final class Version20250218215119_FillingUser extends AbstractMigration
             (1, 'Gourde-Sport', 'Gourde de sport en plastique sans BPA, ergonomique et facile à transporter. Son bouchon anti-fuite et sa prise en main optimisée garantissent une hydratation efficace lors de vos entraînements.', 19.99, NOW(), 'Gourds-sport-1.png'),
             (1, 'Hoodie', 'Sweat à capuche confectionné dans un mélange de coton doux et résistant. Son intérieur molletonné apporte une sensation de chaleur et de confort, tandis que son design épuré aux couleurs du BDS assure un style unique.', 29.99, NOW(), 'Hoodie-men.png'),
             (1, 'T-shirt', 'T-shirt en tissu technique léger, offrant respirabilité et confort optimal. Son impression durable du logo BDS garantit un look dynamique et moderne, adapté aussi bien au sport qu\'au quotidien.', 14.99, NOW(), 'Men T Shirt-1.png'),
-            (1, 'Tote Bag', 'Tote bag en coton biologique, robuste et respectueux de l’environnement. Son format pratique et son design élégant avec logo BDS en font l’allié idéal pour transporter vos affaires avec style.', 12.99, NOW(), 'Tote Bag.jpg');
+            (1, 'Tote Bag', 'Tote bag en coton biologique, robuste et respectueux de l’environnement. Son format pratique et son design élégant avec logo BDS en font l’allié idéal pour transporter vos affaires avec style.', 12.99, NOW(), 'Tote Bag-1.jpg');
         ");
          // Ajout d'articles de test
          $this->addSql("INSERT INTO stock (article_id, quantity) VALUES 

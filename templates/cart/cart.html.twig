@@ -30,10 +30,7 @@
                     {% for item in products %}
                         <tr class="border-b">
                             <td class="py-3 px-4">
-                                <img src="{{ article.imageUrl ?: asset('asset/default-image.jpg') }}" 
-             alt="{{ article.name }}" 
-             class="w-full h-64 object-cover rounded-lg shadow-md"
-             onerror="this.src='{{ asset('asset/default-image.jpg') }}'"/>
+                                
                             </td>
                             <td class="py-3 px-4">{{ item.product.name }}</td>
                             <td class="py-3 px-4 text-center">{{ item.product.price / 100 }} €</td>
