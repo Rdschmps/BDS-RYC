@@ -8,10 +8,10 @@
 
     <!-- Image du produit -->
     <div class="mb-6">
-        <img src="{{ article.imageUrl ?: asset('asset/default-image.jpg') }}" 
-             alt="{{ article.name }}" 
-             class="w-full h-64 object-cover rounded-lg shadow-md"
-             onerror="this.src='{{ asset('asset/default-image.jpg') }}'"/>
+        <img src="{{ article.imageUrl ? asset('uploads/articles/' ~ article.imageUrl) : asset('assets/default-image.jpg') }}" 
+                         alt="{{ article.name }}" 
+                         class=" h-64 object-cover  object-cover transition-opacity duration-300 hover:opacity-90"
+                         onerror="this.src='{{ asset('asset/default-image.jpg') }}'"/>
     </div>
 
     <!-- Description -->

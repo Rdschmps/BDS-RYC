@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paiement Réussi{% endblock %}
+
+{% block body %}
+<div class="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4">
+    <div class="bg-white shadow-xl rounded-lg p-8 max-w-md w-full text-center animate-fadeInUp">
+        
+        <div class="flex items-center justify-center bg-green-100 w-24 h-24 rounded-full mb-6 shadow-md">
+            <svg class="w-16 h-16 text-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </div>
+
+        <h1 class="text-3xl font-bold text-green-700">🎉 Paiement Réussi !</h1>
+        <p class="text-gray-600 mt-3 text-lg">Merci pour votre commande ! Votre paiement a été traité avec succès.</p>
+        <p class="text-gray-500 mt-1">Un e-mail de confirmation vous a été envoyé.</p>
+
+        <a href="{{ path('app_articles_index') }}" 
+           class="mt-6 inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:bg-indigo-700 transition duration-300 transform hover:scale-105">
+            🛍️ Retour à la boutique
+        </a>
+    </div>
+</div>
+
+<style>
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeInUp {
+        animation: fadeInUp 0.8s ease-out;
+    }
+</style>
+{% endblock %}
