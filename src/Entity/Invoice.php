@@ -15,23 +15,25 @@ class Invoice
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'invoices')]
-    #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[ORM\OneToOne(inversedBy: 'invoice', cascade: ['persist', 'remove'])]
+    private ?Cart $cart = null;
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $transactionDate = null;
+    private ?\DateTimeInterface $transaction_date = null;
 
-    #[ORM\Column]
-    private ?float $amount = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $billingAddress = null;
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $amount = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $billingCity = null;
+    private ?string $billing_address = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $billing_city = null;
 
     #[ORM\Column(length: 10)]
-    private ?string $billingPostalCode = null;
+    private ?string $billing_postal_code = null;
 
     public function getId(): ?int
     {
@@ -50,24 +52,36 @@ class Invoice
         return $this;
     }
 
-    public function getTransactionDate(): ?\DateTimeInterface
+    public function getCart(): ?Cart
     {
-        return $this->transactionDate;
+        return $this->cart;
     }
 
-    public function setTransactionDate(\DateTimeInterface $transactionDate): static
+    public function setCart(?Cart $cart): static
     {
-        $this->transactionDate = $transactionDate;
+        $this->cart = $cart;
 
         return $this;
     }
 
-    public function getAmount(): ?float
+    public function getTransactionDate(): ?\DateTimeInterface
+    {
+        return $this->transaction_date;
+    }
+
+    public function setTransactionDate(\DateTimeInterface $transaction_date): static
+    {
+        $this->transaction_date = $transaction_date;
+
+        return $this;
+    }
+
+    public function getAmount(): ?string
     {
         return $this->amount;
     }
 
-    public function setAmount(float $amount): static
+    public function setAmount(string $amount): static
     {
         $this->amount = $amount;
 
@@ -76,36 +90,36 @@ class Invoice
 
     public function getBillingAddress(): ?string
     {
-        return $this->billingAddress;
+        return $this->billing_address;
     }
 
-    public function setBillingAddress(string $billingAddress): static
+    public function setBillingAddress(string $billing_address): static
     {
-        $this->billingAddress = $billingAddress;
+        $this->billing_address = $billing_address;
 
         return $this;
     }
 
     public function getBillingCity(): ?string
     {
-        return $this->billingCity;
+        return $this->billing_city;
     }
 
-    public function setBillingCity(string $billingCity): static
+    public function setBillingCity(string $billing_city): static
     {
-        $this->billingCity = $billingCity;
+        $this->billing_city = $billing_city;
 
         return $this;
     }
 
     public function getBillingPostalCode(): ?string
     {
-        return $this->billingPostalCode;
+        return $this->billing_postal_code;
     }
 
-    public function setBillingPostalCode(string $billingPostalCode): static
+    public function setBillingPostalCode(string $billing_postal_code): static
     {
-        $this->billingPostalCode = $billingPostalCode;
+        $this->billing_postal_code = $billing_postal_code;
 
         return $this;
     }

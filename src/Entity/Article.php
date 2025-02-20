@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use DateTimeImmutable;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
@@ -23,33 +22,27 @@ class Article
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     private ?string $price = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $publishedAt = null;
-
-    #[ORM\ManyToOne(inversedBy: 'articles')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $author = null;
+    #[ORM\Column]
+    private ?int $quantity = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $imageUrl = null;
+    private ?string $image_url = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $published_at = null;
 
     /**
-     * @var Collection<int, Cart>
+     * @var Collection<int, Images>
      */
-    #[ORM\OneToMany(targetEntity: Cart::class, mappedBy: 'article')]
-    private Collection $carts;
+    #[ORM\OneToMany(targetEntity: Images::class, mappedBy: 'article')]
+    private Collection $images;
 
-    #[ORM\OneToOne(mappedBy: 'article', cascade: ['persist', 'remove'])]
-    private ?Stock $stock = null;
-
-    // ✅ Constructeur unique avec initialisation de `publishedAt`
     public function __construct()
     {
-        $this->publishedAt = new DateTimeImmutable();
-        $this->carts = new ArrayCollection();
+        $this->images = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -65,6 +58,7 @@ class Article
     public function setName(string $name): static
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -76,6 +70,7 @@ class Article
     public function setDescription(string $description): static
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -84,84 +79,76 @@ class Article
         return $this->price;
     }
 
-    public function setPrice(string $price): static
+    public function setPrice(?string $price): static
     {
         $this->price = $price;
+
         return $this;
     }
 
-    public function getPublishedAt(): ?\DateTimeInterface
+    public function getQuantity(): ?int
     {
-        return $this->publishedAt;
+        return $this->quantity;
     }
 
-    public function setPublishedAt(\DateTimeInterface $publishedAt): static
+    public function setQuantity(int $quantity): static
     {
-        $this->publishedAt = $publishedAt;
-        return $this;
-    }
+        $this->quantity = $quantity;
 
-    public function getAuthor(): ?User
-    {
-        return $this->author;
-    }
-
-    public function setAuthor(?User $author): static
-    {
-        $this->author = $author;
         return $this;
     }
 
     public function getImageUrl(): ?string
     {
-        return $this->imageUrl;
+        return $this->image_url;
     }
 
-    public function setImageUrl(?string $imageUrl): static
+    public function setImageUrl(?string $image_url): static
     {
-        $this->imageUrl = $imageUrl;
+        $this->image_url = $image_url;
+
+        return $this;
+    }
+
+    public function getPublishedAt(): ?\DateTimeImmutable
+    {
+        return $this->published_at;
+    }
+
+    public function setPublishedAt(\DateTimeImmutable $published_at): static
+    {
+        $this->published_at = $published_at;
+
         return $this;
     }
 
     /**
-     * @return Collection<int, Cart>
+     * @return Collection<int, Images>
      */
-    public function getCarts(): Collection
+    public function getImages(): Collection
     {
-        return $this->carts;
+        return $this->images;
     }
 
-    public function addCart(Cart $cart): static
+    public function addImage(Images $image): static
     {
-        if (!$this->carts->contains($cart)) {
-            $this->carts->add($cart);
-            $cart->setArticle($this);
+        if (!$this->images->contains($image)) {
+            $this->images->add($image);
+            $image->setArticle($this);
         }
+
         return $this;
     }
 
-    public function removeCart(Cart $cart): static
+    public function removeImage(Images $image): static
     {
-        if ($this->carts->removeElement($cart)) {
-            if ($cart->getArticle() === $this) {
-                $cart->setArticle(null);
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getArticle() === $this) {
+                $image->setArticle(null);
             }
         }
-        return $this;
-    }
 
-    public function getStock(): ?Stock
-    {
-        return $this->stock;
-    }
-
-    public function setStock(Stock $stock): static
-    {
-        if ($stock->getArticle() !== $this) {
-            $stock->setArticle($this);
-        }
-
-        $this->stock = $stock;
         return $this;
     }
 }
