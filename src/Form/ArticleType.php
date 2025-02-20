@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ArticleType extends AbstractType
 {
@@ -18,32 +19,53 @@ class ArticleType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Nom de l\'article'
+                'label' => 'Nom de l\'article',
+                'attr' => ['class' => 'form-control'],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Le nom de l\'article est requis.'
+                    ])
+                ]
             ])
             ->add('description', TextType::class, [
-                'label' => 'Description'
+                'label' => 'Description',
+                'attr' => ['class' => 'form-control'],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'La description est requise.'
+                    ])
+                ]
             ])
             ->add('price', NumberType::class, [
-                'label' => 'Prix'
+                'label' => 'Prix (€)',
+                'attr' => ['class' => 'form-control'],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Le prix est requis.'
+                    ])
+                ]
             ])
             ->add('image', FileType::class, [
                 'label' => 'Image de l\'article',
-                'mapped' => false,  // Ne correspond pas directement à une colonne de la BDD
-                'required' => false,
+                'mapped' => false, // Champ non lié directement à l'entité
+                'required' => false, // L'image n'est pas obligatoire
+                'attr' => ['class' => 'form-control'],
                 'constraints' => [
                     new File([
-                        'maxSize' => '2M', // Taille max 2MB
+                        'maxSize' => '2M', // Taille maximale de 2MB
                         'mimeTypes' => [
                             'image/jpeg',
                             'image/png',
+                            'image/webp',
                             'image/gif',
                         ],
-                        'mimeTypesMessage' => 'Merci d’uploader une image valide (JPG, PNG, GIF)',
+                        'mimeTypesMessage' => 'Merci d’uploader une image valide (JPG, PNG, WEBP, GIF)',
                     ])
                 ],
             ])
             ->add('save', SubmitType::class, [
-                'label' => 'Enregistrer'
+                'label' => 'Enregistrer',
+                'attr' => ['class' => 'btn btn-success']
             ]);
     }
 
@@ -54,3 +76,4 @@ class ArticleType extends AbstractType
         ]);
     }
 }
+
