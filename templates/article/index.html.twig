@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Article index{% endblock %}
+{% block title %}Articles index{% endblock %}
 
 {% block body %}
 <div class="container mx-auto max-w-screen-xl px-4 py-10">
@@ -19,7 +19,7 @@
                         <h4 class="text-sm font-semibold text-gray-900">{{ article.name }}</h4>
                         <p class="text-xs text-gray-700 mt-1">💰 <span class="font-bold text-indigo-600">{{ article.price }} €</span></p>
                         <p class="mt-2">
-                            {% if article.stock and article.stock.quantity > 0 %}
+                            {% if article.quantity > 0 %}
                                 <span class="text-green-600 font-bold">Disponible</span>
                             {% else %}
                                 <span class="text-red-600 font-bold">Indisponible</span>
@@ -40,5 +40,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_article_new') }}">Create new</a>
+    <a href="{{ path('app_articles_new') }}">Create new</a>
 {% endblock %}
