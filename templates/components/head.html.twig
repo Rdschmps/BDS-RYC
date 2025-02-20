@@ -4,11 +4,11 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-UqC5k6k5n9B63XkL+VtLQm+q6l2J6q5O2Ml9lFlDlBq3W0Jl5T9nC9F5lc5J3gxr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
      {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
-        <link rel="stylesheet" href="{{ asset('css/fallback.css') }}"> {# Fallback si nécessaire #}
     {% endblock %}
     {% block javascripts %}
         {% block importmap %}{{ importmap('app') }}{% endblock %}

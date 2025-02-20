@@ -14,10 +14,26 @@
                 <img id="image2" src="" alt="Image 2" class="w-1/2 md:w-1/2 h-[800px] md:h-[800px] object-cover">
             </section>
 
-            <section id="NewItems" class="w-full p-6">
+            <section id="NewItems" class="w-full p-6 overflow-hidden">
                 <h1 class="text-2xl font-bold text-center">News Items</h1>
                 <p class="text-gray-600 text-center">Dernières actualités et nouveautés</p>
+                <div class="snap-x snap-mandatory overflow-x-auto w-full flex space-x-6">
+                    {% for i in 1..10 %}
+                    <div class="snap-center w-80 flex-shrink-0 text-center">
+                        <img src="https://picsum.photos/400/400/?random={{ i }}" alt="Produit {{ i }}">
+                        <div class="mt-2">
+                            <strong>Nom du Produit {{ i }}</strong><br>
+                            <span class="text-gray-700">€{{ (i * 10) + 19 }}.99</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>            
+            
+            <section id="SeeMore" class="w-full text-center mt-8 mb-12">
+                <a href="/articles" class="text-blue-600 hover:text-blue-800 text-lg font-semibold">Voir plus</a>
             </section>
+            
         </div>
 
         {% include 'components/footer.html.twig' %}
