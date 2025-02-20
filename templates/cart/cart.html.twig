@@ -6,10 +6,10 @@
 <div class="container mx-auto max-w-4xl px-4 py-8">
     <h1 class="text-3xl font-bold text-gray-900 mb-6 text-center">🛍️ Mon Panier</h1>
 
-    {% if products is empty %}
+    {% if articles is empty %}
         <div class="text-center bg-gray-100 p-6 rounded-lg shadow-md">
             <p class="text-lg text-gray-700">Votre panier est vide.</p>
-            <a href="{{ path('home') }}" 
+            <a href="/" 
                class="mt-4 inline-block bg-indigo-600 text-black px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-indigo-700 transition">
                 🛒 Retour à la boutique
             </a>
@@ -20,22 +20,25 @@
                 <thead class="bg-indigo-600 text-white">
                     <tr>
                         <th class="py-3 px-4 text-left">Image</th>
-                        <th class="py-3 px-4 text-left">Produit</th>
+                        <th class="py-3 px-4 text-left">Article</th>
                         <th class="py-3 px-4 text-center">Prix</th>
                         <th class="py-3 px-4 text-center">Quantité</th>
                         <th class="py-3 px-4 text-center">Sous-total</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for item in products %}
+                    {% for article in articles %}
                         <tr class="border-b">
                             <td class="py-3 px-4">
-                                
+                                <img src="{{ asset(article.imageUrl) }}" 
+                                     alt="{{ article.name }}" 
+                                     class="h-64 object-cover transition-opacity duration-300 hover:opacity-90"
+                                     onerror="this.src='{{ asset('assets/default-image.jpg') }}'"/>
                             </td>
-                            <td class="py-3 px-4">{{ item.product.name }}</td>
-                            <td class="py-3 px-4 text-center">{{ item.product.price / 100 }} €</td>
-                            <td class="py-3 px-4 text-center">{{ item.quantity }}</td>
-                            <td class="py-3 px-4 text-center font-semibold">{{ item.subtotal / 100 }} €</td>
+                            <td class="py-3 px-4">{{ article.name }}</td> {# Correction ici #}
+                            <td class="py-3 px-4 text-center">{{ article.price}} €</td>
+                            <td class="py-3 px-4 text-center">{{ article.quantity }}</td>
+                            <td class="py-3 px-4 text-center font-semibold">{{ article.subtotal }} €</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -44,7 +47,7 @@
 
         <!-- Total et bouton de validation -->
         <div class="mt-6 text-right">
-            <h3 class="text-2xl font-bold text-gray-900">Total : <span class="text-indigo-600">{{ total / 100 }} €</span></h3>
+            <h3 class="text-2xl font-bold text-gray-900">Total : <span class="text-indigo-600">{{ total  }} €</span></h3>
             <a href="{{ path('checkout_page') }}" 
                class="mt-4 inline-block bg-green-600 text-black px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-green-700 transition">
                 ✅ Valider le panier et payer
