@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Service\CartService;
 use App\Repository\ArticleRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -123,8 +124,22 @@ class PaymentController extends AbstractController
      * Page de succès après paiement
      */
     #[Route('/payment-success', name: 'payment_success')]
-    public function success(): Response
+    public function success(CartService $cartService, ArticleRepository $articleRepository, EntityManagerInterface $entityManager): Response
     {
+        $cart = $cartService->getCart();
+
+        foreach ($cart as $articleId => $quantity) {
+            $article = $articleRepository->find($articleId);
+
+            if ($article && $article->getStock() && $article->getStock()->getQuantity() >= $quantity) {
+                $article->getStock()->setQuantity($article->getStock()->getQuantity() - $quantity);
+                $entityManager->persist($article);
+            }
+        }
+
+        $entityManager->flush();
+        $cartService->clearCart(); // Vider le panier après la mise à jour du stock
+
         return $this->render('payment/success.html.twig');
     }
 
