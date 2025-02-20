@@ -1,18 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg"/>
-
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
-
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
+        {% include 'components/head.html.twig' %}
     </head>
     <body class="bg-gray-100">
 
@@ -24,7 +13,7 @@
                 <img id="image1" src="" alt="Image 1" class="w-1/2 h-auto">
                 <img id="image2" src="" alt="Image 2" class="w-1/2 h-auto">
             </section>
-            <section>
+            <section id="NewItems">
 
             </section>
         </div>
