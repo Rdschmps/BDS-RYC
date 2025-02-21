@@ -10,8 +10,11 @@
         <div class="flex flex-col items-center space-y-8 w-full"> 
 
             <section id="Image-Container" class="flex flex-wrap md:flex-nowrap">
-                <img id="image1" src="" alt="Image 1" class="w-1/2 md:w-1/2 h-[800px] md:h-[800px] object-cover">
-                <img id="image2" src="" alt="Image 2" class="w-1/2 md:w-1/2 h-[800px] md:h-[800px] object-cover">
+                <img id="image1" src="{{ homepageImages.image1 ? asset('uploads/homepage/' ~ homepageImages.image1)  }}" 
+                     alt="Image 1" class="w-full md:w-1/2 h-[800px] object-cover">
+                
+                <img id="image2" src="{{ homepageImages.image2 ? asset('uploads/homepage/' ~ homepageImages.image2)  }}" 
+                     alt="Image 2" class="w-full md:w-1/2 h-[800px] object-cover">
             </section>
 
             <section id="NewItems" class="w-full p-6 overflow-hidden">
@@ -19,19 +22,20 @@
                 <p class="text-gray-600 text-center">Dernières actualités et nouveautés</p>
                 <div class="snap-x snap-mandatory overflow-x-auto w-full flex space-x-6">
                     {% for article in articles %}
-                    <div class="snap-center w-80 flex-shrink-0 text-center">
-                      <img src="{{ article.imageUrl ? asset('uploads/articles/' ~ article.imageUrl) : asset('assets/default-image.jpg') }}" 
-                         alt="{{ article.name }}" 
-                         class=" h-64 object-cover  object-cover transition-opacity duration-300 hover:opacity-90"
-                         onerror="this.src='https://picsum.photos/400/400/?random={{ article.id }}'"/>
+                    <div class="snap-center w-80 flex-shrink-0 flex flex-col items-center text-center">
+                        <img src="{{ article.imageUrl ? asset('uploads/articles/' ~ article.imageUrl) : asset('assets/default-image.jpg') }}" 
+                             alt="{{ article.name }}" 
+                             class="h-64 object-cover transition-opacity duration-300 hover:opacity-90"
+                             onerror="this.src='https://picsum.photos/400/400/?random={{ article.id }}'"/>
                         <div class="mt-2">
                             <strong>{{ article.name }}</strong><br>
-                            <span class="text-gray-700">€{{ article.price }}</span> 
+                            <span class="text-gray-700">€{{ article.price }}</span>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
             </section>
+            
             
                    
             <section id="SeeMore" class="w-full text-center mt-8 mb-12">
@@ -40,7 +44,7 @@
             
             <section id="Categories" class="w-full p-6 overflow-hidden">
                 <h1 class="text-2xl font-bold text-center">Catégories</h1>
-                <div class="snap-x snap-mandatory overflow-x-auto w-full flex justify-center space-x-6">
+                <div class="snap-x snap-mandatory overflow-x-auto w-full flex justify-start space-x-6">
                     {% set categories = ['Vêtements', 'Personnalisable', 'Accessoires', 'Papeterie'] %}
                     {% set images = [
                         'https://picsum.photos/400/400/?random=1', 
@@ -61,8 +65,6 @@
                     {% endfor %}
                 </div>
             </section>
-            
-              
         </div>
 
         {% include 'components/footer.html.twig' %}
@@ -83,8 +85,6 @@
                 image1.style.height = `${mobileHeight}px`;
                 image2.style.height = `${mobileHeight}px`;
 
-                image1.src = `https://picsum.photos/${screenWidth}/${mobileHeight}`;
-                image2.src = `https://picsum.photos/${screenWidth}/${mobileHeight}`;
             } else { 
                 // Desktop : 50% de largeur, 800px de hauteur
                 image1.style.width = "50%";
@@ -92,8 +92,6 @@
                 image1.style.height = "800px";
                 image2.style.height = "800px";
 
-                image1.src = `https://picsum.photos/${screenWidth / 2}/800`;
-                image2.src = `https://picsum.photos/${screenWidth / 2}/800`;
             }
         }
 
