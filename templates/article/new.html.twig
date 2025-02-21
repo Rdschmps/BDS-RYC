@@ -6,7 +6,9 @@
 <div class="container">
     <h1 class="my-4">Ajouter un Article</h1>
 
-    {{ form_start(form) }}
+    {# Ajout de enctype="multipart/form-data" pour permettre l'upload d'images #}
+    {{ form_start(form, { 'attr': {'enctype': 'multipart/form-data'} }) }}
+
         <div class="mb-3">
             {{ form_label(form.name, 'Nom de l\'article') }}
             {{ form_widget(form.name, { 'attr': {'class': 'form-control'} }) }}
@@ -20,6 +22,12 @@
         <div class="mb-3">
             {{ form_label(form.price, 'Prix') }}
             {{ form_widget(form.price, { 'attr': {'class': 'form-control'} }) }}
+        </div>
+
+        {# Champ pour l'upload de l'image #}
+        <div class="mb-3">
+            {{ form_label(form.image, 'Image de l\'article') }}
+            {{ form_widget(form.image, { 'attr': {'class': 'form-control'} }) }}
         </div>
 
         <button type="submit" class="btn btn-success">Enregistrer</button>
