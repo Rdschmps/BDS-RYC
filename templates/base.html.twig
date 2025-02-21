@@ -18,22 +18,51 @@
                 <h1 class="text-2xl font-bold text-center">News Items</h1>
                 <p class="text-gray-600 text-center">Dernières actualités et nouveautés</p>
                 <div class="snap-x snap-mandatory overflow-x-auto w-full flex space-x-6">
-                    {% for i in 1..10 %}
+                    {% for article in articles %}
                     <div class="snap-center w-80 flex-shrink-0 text-center">
-                        <img src="https://picsum.photos/400/400/?random={{ i }}" alt="Produit {{ i }}">
+                      <img src="{{ article.imageUrl ? asset('uploads/articles/' ~ article.imageUrl) : asset('assets/default-image.jpg') }}" 
+                         alt="{{ article.name }}" 
+                         class=" h-64 object-cover  object-cover transition-opacity duration-300 hover:opacity-90"
+                         onerror="this.src='https://picsum.photos/400/400/?random={{ article.id }}'"/>
                         <div class="mt-2">
-                            <strong>Nom du Produit {{ i }}</strong><br>
-                            <span class="text-gray-700">€{{ (i * 10) + 19 }}.99</span>
+                            <strong>{{ article.name }}</strong><br>
+                            <span class="text-gray-700">€{{ article.price }}</span> 
                         </div>
                     </div>
                     {% endfor %}
                 </div>
-            </section>            
+            </section>
             
+                   
             <section id="SeeMore" class="w-full text-center mt-8 mb-12">
                 <a href="/articles" class="text-blue-600 hover:text-blue-800 text-lg font-semibold">Voir plus</a>
             </section>
             
+            <section id="Categories" class="w-full p-6 overflow-hidden">
+                <h1 class="text-2xl font-bold text-center">Catégories</h1>
+                <div class="snap-x snap-mandatory overflow-x-auto w-full flex justify-center space-x-6">
+                    {% set categories = ['Vêtements', 'Personnalisable', 'Accessoires', 'Papeterie'] %}
+                    {% set images = [
+                        'https://picsum.photos/400/400/?random=1', 
+                        'https://picsum.photos/400/400/?random=2', 
+                        'https://picsum.photos/400/400/?random=3', 
+                        'https://picsum.photos/400/400/?random=4'
+                    ] %}
+            
+                    {% for i in 0..3 %}
+                    <div class="snap-center w-80 flex-shrink-0 text-center">
+                        <a href="/category/{{ categories[i]|lower }}" class="block">
+                            <img src="{{ images[i] }}" alt="{{ categories[i] }}" class="w-full h-auto object-cover mx-auto">
+                            <div class="mt-2">
+                                <strong>{{ categories[i] }}</strong><br>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            
+              
         </div>
 
         {% include 'components/footer.html.twig' %}
