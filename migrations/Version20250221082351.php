@@ -23,6 +23,7 @@ final class Version20250221082351 extends AbstractMigration
         $this->addSql('CREATE TABLE homepage_image (id INT AUTO_INCREMENT NOT NULL, image1 VARCHAR(255) DEFAULT NULL, image2 VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649F85E0677 ON user (username)');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649E7927C74 ON user (email)');
+        $this->addSql("INSERT INTO homepage_image (id, image1, image2) VALUES (1, 'image1.jpg', 'image2.jpg');");
     }
 
     public function down(Schema $schema): void
