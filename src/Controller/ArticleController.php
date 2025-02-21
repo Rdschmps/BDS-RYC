@@ -45,13 +45,13 @@ class ArticleController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $article = new Article();
-        
-        // Vérifier que l'utilisateur est connecté avant d'affecter l'auteur
+
+        // Vérifie si l'utilisateur est connecté avant d'affecter l'auteur
         $user = $this->getUser();
         if (!$user) {
             throw $this->createAccessDeniedException('Vous devez être connecté pour ajouter un article.');
         }
-        
+
         $article->setAuthor($user);
         $article->setPublishedAt(new DateTimeImmutable());
 
@@ -59,6 +59,23 @@ class ArticleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $imageFile */
+            $imageFile = $form->get('image')->getData();
+
+            if ($imageFile) {
+                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
+
+                try {
+                    $imageFile->move(
+                        $this->getParameter('articles_directory'), // Dossier configuré dans services.yaml
+                        $newFilename
+                    );
+                    $article->setImageUrl($newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash('error', 'Erreur lors de l\'upload de l\'image.');
+                }
+            }
+
             $entityManager->persist($article);
             $entityManager->flush();
 
@@ -70,6 +87,7 @@ class ArticleController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
 
     // 🔹 Modification d'un article (ROLE_ADMIN)
     #[Route('/admin/{id}/edit', name: 'app_articles_edit', methods: ['GET', 'POST'])]
