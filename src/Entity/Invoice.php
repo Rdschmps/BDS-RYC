@@ -14,26 +14,27 @@ class Invoice
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'invoices')]
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\OneToOne(inversedBy: 'invoice', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Cart $cart = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $transaction_date = null;
+    private ?\DateTimeInterface $transactionDate = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $amount = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $billing_address = null;
+    private ?string $billingAddress = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $billing_city = null;
+    private ?string $billingCity = null;
 
-    #[ORM\Column(length: 10)]
-    private ?string $billing_postal_code = null;
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $billingPostalCode = null;
 
     public function getId(): ?int
     {
@@ -66,12 +67,12 @@ class Invoice
 
     public function getTransactionDate(): ?\DateTimeInterface
     {
-        return $this->transaction_date;
+        return $this->transactionDate;
     }
 
-    public function setTransactionDate(\DateTimeInterface $transaction_date): static
+    public function setTransactionDate(\DateTimeInterface $transactionDate): static
     {
-        $this->transaction_date = $transaction_date;
+        $this->transactionDate = $transactionDate;
 
         return $this;
     }
@@ -90,36 +91,36 @@ class Invoice
 
     public function getBillingAddress(): ?string
     {
-        return $this->billing_address;
+        return $this->billingAddress;
     }
 
-    public function setBillingAddress(string $billing_address): static
+    public function setBillingAddress(string $billingAddress): static
     {
-        $this->billing_address = $billing_address;
+        $this->billingAddress = $billingAddress;
 
         return $this;
     }
 
     public function getBillingCity(): ?string
     {
-        return $this->billing_city;
+        return $this->billingCity;
     }
 
-    public function setBillingCity(string $billing_city): static
+    public function setBillingCity(string $billingCity): static
     {
-        $this->billing_city = $billing_city;
+        $this->billingCity = $billingCity;
 
         return $this;
     }
 
     public function getBillingPostalCode(): ?string
     {
-        return $this->billing_postal_code;
+        return $this->billingPostalCode;
     }
 
-    public function setBillingPostalCode(string $billing_postal_code): static
+    public function setBillingPostalCode(?string $billingPostalCode): static
     {
-        $this->billing_postal_code = $billing_postal_code;
+        $this->billingPostalCode = $billingPostalCode;
 
         return $this;
     }

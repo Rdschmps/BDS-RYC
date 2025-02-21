@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\ArticleRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -23,27 +21,16 @@ class Article
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
-    private ?string $price = null;
+    private ?string $supplierPrice = null;
 
     #[ORM\Column]
     private ?int $quantity = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $image_url = null;
+    private ?string $imageUrl = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $published_at = null;
-
-    /**
-     * @var Collection<int, Images>
-     */
-    #[ORM\OneToMany(targetEntity: Images::class, mappedBy: 'article')]
-    private Collection $images;
-
-    public function __construct()
-    {
-        $this->images = new ArrayCollection();
-    }
+    private ?\DateTimeImmutable $publishedAt = null;
 
     public function getId(): ?int
     {
@@ -74,14 +61,14 @@ class Article
         return $this;
     }
 
-    public function getPrice(): ?string
+    public function getSupplierPrice(): ?string
     {
-        return $this->price;
+        return $this->supplierPrice;
     }
 
-    public function setPrice(?string $price): static
+    public function setSupplierPrice(?string $supplierPrice): static
     {
-        $this->price = $price;
+        $this->supplierPrice = $supplierPrice;
 
         return $this;
     }
@@ -100,56 +87,25 @@ class Article
 
     public function getImageUrl(): ?string
     {
-        return $this->image_url;
+        return $this->imageUrl;
     }
 
-    public function setImageUrl(?string $image_url): static
+    public function setImageUrl(?string $imageUrl): static
     {
-        $this->image_url = $image_url;
+        $this->imageUrl = $imageUrl;
 
         return $this;
     }
 
     public function getPublishedAt(): ?\DateTimeImmutable
     {
-        return $this->published_at;
+        return $this->publishedAt;
     }
 
-    public function setPublishedAt(\DateTimeImmutable $published_at): static
+    public function setPublishedAt(\DateTimeImmutable $publishedAt): static
     {
-        $this->published_at = $published_at;
+        $this->publishedAt = $publishedAt;
 
         return $this;
     }
-
-    /**
-     * @return Collection<int, Images>
-     */
-    public function getImages(): Collection
-    {
-        return $this->images;
-    }
-
-    public function addImage(Images $image): static
-    {
-        if (!$this->images->contains($image)) {
-            $this->images->add($image);
-            $image->setArticle($this);
-        }
-
-        return $this;
-    }
-
-    public function removeImage(Images $image): static
-    {
-        if ($this->images->removeElement($image)) {
-            // set the owning side to null (unless already changed)
-            if ($image->getArticle() === $this) {
-                $image->setArticle(null);
-            }
-        }
-
-        return $this;
-    }
-    
 }

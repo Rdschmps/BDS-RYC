@@ -15,22 +15,20 @@ class Cart
     private ?int $id = null;
 
     #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\Column]
-    private array $items = [];
+    #[ORM\Column(nullable: true)]
+    private ?array $items = null;
 
     #[ORM\Column(length: 50)]
     private ?string $status = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
-    private ?string $total_price = null;
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $totalPrice = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $created_at = null;
-
-    #[ORM\OneToOne(mappedBy: 'cart', cascade: ['persist', 'remove'])]
-    private ?Invoice $invoice = null;
+    private ?\DateTimeImmutable $createdAt = null;
 
     public function getId(): ?int
     {
@@ -49,12 +47,12 @@ class Cart
         return $this;
     }
 
-    public function getItems(): array
+    public function getItems(): ?array
     {
         return $this->items;
     }
 
-    public function setItems(array $items): static
+    public function setItems(?array $items): static
     {
         $this->items = $items;
 
@@ -75,46 +73,24 @@ class Cart
 
     public function getTotalPrice(): ?string
     {
-        return $this->total_price;
+        return $this->totalPrice;
     }
 
-    public function setTotalPrice(?string $total_price): static
+    public function setTotalPrice(string $totalPrice): static
     {
-        $this->total_price = $total_price;
+        $this->totalPrice = $totalPrice;
 
         return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): static
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    public function getInvoice(): ?Invoice
-    {
-        return $this->invoice;
-    }
-
-    public function setInvoice(?Invoice $invoice): static
-    {
-        // unset the owning side of the relation if necessary
-        if ($invoice === null && $this->invoice !== null) {
-            $this->invoice->setCart(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($invoice !== null && $invoice->getCart() !== $this) {
-            $invoice->setCart($this);
-        }
-
-        $this->invoice = $invoice;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
