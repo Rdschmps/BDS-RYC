@@ -17,13 +17,15 @@
             <section id="NewItems" class="w-full p-6 overflow-hidden">
                 <h1 class="text-2xl font-bold text-center">News Items</h1>
                 <p class="text-gray-600 text-center">Dernières actualités et nouveautés</p>
-                <div class="snap-x snap-mandatory overflow-x-auto w-full flex space-x-6">
+                <div class="snap-x snap-mandatory overflow-x-auto w-full flex space-x-6 justify-center">
                     {% for article in articles %}
                     <div class="snap-center w-80 flex-shrink-0 text-center">
-                      <img src="{{ article.imageUrl ? asset('uploads/articles/' ~ article.imageUrl) : asset('assets/default-image.jpg') }}" 
-                         alt="{{ article.name }}" 
-                         class=" h-64 object-cover  object-cover transition-opacity duration-300 hover:opacity-90"
-                         onerror="this.src='https://picsum.photos/400/400/?random={{ article.id }}'"/>
+                        <a href="/articles/{{ article.id }}">
+                            <img src="{{ article.imageUrl ? asset('uploads/articles/' ~ article.imageUrl) : asset('assets/default-image.jpg') }}" 
+                                 alt="{{ article.name }}" 
+                                 class="h-64 object-cover mx-auto transition-opacity duration-300 hover:opacity-90"
+                                 onerror="this.src='https://picsum.photos/400/400/?random={{ article.id }}'"/>
+                        </a>
                         <div class="mt-2">
                             <strong>{{ article.name }}</strong><br>
                             <span class="text-gray-700">€{{ article.price }}</span> 
@@ -31,10 +33,9 @@
                     </div>
                     {% endfor %}
                 </div>
-            </section>
-            
+            </section>            
                    
-            <section id="SeeMore" class="w-full text-center mt-8 mb-12">
+            <section id="SeeMore" class="w-full text-center mt-2 mb-12">
                 <a href="/articles" class="text-blue-600 hover:text-blue-800 text-lg font-semibold">Voir plus</a>
             </section>
             
