@@ -164,4 +164,5 @@ class Article
         $this->stock = $stock;
         return $this;
     }
+    
 }
