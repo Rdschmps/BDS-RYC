@@ -112,6 +112,7 @@ final class Version20250220154844 extends AbstractMigration
         $this->addSql('ALTER TABLE invoice DROP FOREIGN KEY FK_906517441AD5CDBF');
         $this->addSql('DROP TABLE article');
         $this->addSql('DROP TABLE cart');
+        $this->addSql('DROP TABLE cart_items');
         $this->addSql('DROP TABLE images');
         $this->addSql('DROP TABLE invoice');
         $this->addSql('DROP TABLE user');
