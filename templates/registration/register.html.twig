@@ -5,7 +5,6 @@
 {% block stylesheets %}
     {{ parent() }}  
     {% if app.request.attributes.get('_route') == 'app_register' %}
-        <link rel="stylesheet" href="{{ asset('assets/css/Login.css') }}">
     {% endif %}
 {% endblock %}
 
