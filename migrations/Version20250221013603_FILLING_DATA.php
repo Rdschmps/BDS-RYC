@@ -37,6 +37,14 @@ final class Version20250221013603 extends AbstractMigration
         (NOW(), 249.99, "25 avenue Dev", "Lyon", "69003", 2, 2)
         ');
 
+        #🗣️🔥 Création d'articles avec images fictives.
+        $this->addSql('INSERT INTO article (name, description, price, supplier_price, quantity, image_url, published_at) VALUES 
+        ("Ordinateur Gamer", "PC ultra performant pour le gaming.", 1499.99, 1200.00, 10, "img/pc_gamer.jpg", NOW()),
+        ("Smartphone Pro", "Un smartphone haut de gamme avec appareil photo avancé.", 999.99, 800.00, 25, "img/smartphone_pro.jpg", NOW()),
+        ("Casque Bluetooth", "Casque sans fil avec réduction de bruit.", 199.99, 150.00, 50, "img/casque_bt.jpg", NOW()),
+        ("Clavier Mécanique", "Clavier mécanique RGB pour gamers et professionnels.", 129.99, 90.00, 30, "img/clavier_rgb.jpg", NOW()),
+        ("Écran 4K", "Écran UHD 4K avec taux de rafraîchissement élevé.", 499.99, 400.00, 15, "img/ecran_4k.jpg", NOW())
+        ');
 
 
     }
