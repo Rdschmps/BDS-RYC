@@ -35,13 +35,22 @@
                                      class="h-64 object-cover transition-opacity duration-300 hover:opacity-90"
                                      onerror="this.src='{{ asset('assets/default-image.jpg') }}'"/>
                             </td>
-                            <td class="py-3 px-4">{{ article.name }}</td> {# Correction ici #}
+                            <td class="py-3 px-4">{{ article.name }}</td>
                             <td class="py-3 px-4 text-center">{{ article.price}} €</td>
                             <td class="py-3 px-4 text-center">{{ article.quantity }}</td>
                             <td class="py-3 px-4 text-center font-semibold">{{ article.subtotal }} €</td>
+                            <td class="py-3 px-4 text-center">
+                                <a href="{{ path('remove_from_cart', {'id': article.id}) }}" 
+                                   class="bg-red-600 text-white px-3 py-2 rounded-md shadow-md hover:bg-red-700 transition">
+                                   ❌ Supprimer
+                                </a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
+                
+                
+                
             </table>
         </div>
 

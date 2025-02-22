@@ -30,11 +30,13 @@ security:
                 path: app_logout
                 target: app_login
             entry_point: App\Security\AppAuthenticator # ✅ Définit l'authenticator principal
+            stateless: false
 
     access_control:
         - { path: ^/dashboard, roles: ROLE_ADMIN }
         - { path: ^/user-dashboard, roles: ROLE_USER }
         - { path: ^/account, roles: [ROLE_ADMIN, ROLE_USER] }
         - { path: ^/articles/admin, roles: ROLE_ADMIN }
+        
         
         

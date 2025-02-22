@@ -21,6 +21,9 @@ class Cart
     #[ORM\JoinColumn(nullable: false)]
     private ?Article $article = null;
 
+    #[ORM\Column(type: 'integer', options: ['default' => 1])]
+    private int $quantity = 1; // Défaut : 1 article minimum
+
     public function getId(): ?int
     {
         return $this->id;
@@ -34,7 +37,6 @@ class Cart
     public function setUser(?User $user): static
     {
         $this->user = $user;
-
         return $this;
     }
 
@@ -46,7 +48,27 @@ class Cart
     public function setArticle(?Article $article): static
     {
         $this->article = $article;
-
         return $this;
+    }
+
+    public function getQuantity(): int
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity(int $quantity): static
+    {
+        $this->quantity = max(1, $quantity); // Empêche la quantité d'être négative
+        return $this;
+    }
+
+    public function incrementQuantity(): void
+    {
+        $this->quantity++;
+    }
+
+    public function decrementQuantity(): void
+    {
+        $this->quantity = max(1, $this->quantity - 1);
     }
 }
