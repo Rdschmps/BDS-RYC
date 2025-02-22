@@ -31,8 +31,7 @@
                                         <img src="{{ article.imageUrl ? asset('uploads/articles/' ~ article.imageUrl) : asset('assets/default-image.jpg') }}" 
                                              alt="{{ article.name }}" 
                                              class="h-72 w-full object-cover transition-opacity duration-300 hover:opacity-90"
-                                             onerror="this.src='https://picsum.photos/400/400/?random={{ article.id }}'"
-                                        />
+                                             onerror="this.src='https://picsum.photos/400/400/?random={{ article.id }}'"/>
                                         <div class="mt-2 text-center">
                                             <strong class="text-lg">{{ article.name }}</strong>
                                             <p class="text-gray-700">€{{ article.price }}</p>
@@ -60,75 +59,83 @@
             </section>
             
             <section id="Categories" class="w-full p-6 overflow-hidden">
-                <h1 class="text-2xl font-bold text-center">Catégories</h1>
-                <div class="snap-x snap-mandatory overflow-x-auto w-full flex justify-start space-x-6">
-                    {% set categories = ['Vêtements', 'Personnalisable', 'Accessoires', 'Papeterie'] %}
-                    {% set images = [
-                        'https://picsum.photos/400/400/?random=1', 
-                        'https://picsum.photos/400/400/?random=2', 
-                        'https://picsum.photos/400/400/?random=3', 
-                        'https://picsum.photos/400/400/?random=4'
-                    ] %}
-            
-                    {% for i in 0..3 %}
-                    <div class="snap-center w-80 flex-shrink-0 text-center">
-                        <a href="/category/{{ categories[i]|lower }}" class="block">
-                            <img src="{{ images[i] }}" alt="{{ categories[i] }}" class="w-full h-auto object-cover mx-auto">
-                            <div class="mt-2">
-                                <strong>{{ categories[i] }}</strong><br>
-                            </div>
-                        </a>
+                <div class="max-w-screen-xl mx-auto">
+                    <h1 class="text-2xl font-bold text-center">Catégories</h1>
+                    <div class="snap-x snap-mandatory overflow-x-auto w-full flex space-x-6">
+                        {% set categories = ['Vêtements', 'Personnalisable', 'Accessoires', 'Papeterie'] %}
+                        {% set images = [
+                            'https://picsum.photos/400/400/?random=1', 
+                            'https://picsum.photos/400/400/?random=2', 
+                            'https://picsum.photos/400/400/?random=3', 
+                            'https://picsum.photos/400/400/?random=4'
+                        ] %}
+                
+                        {% for i in 0..3 %}
+                        <div class="snap-center flex-shrink-0 w-full md:w-1/4 sm:w-1/2 lg:w-1/4">
+                            <a href="/category/{{ categories[i]|lower }}" class="block">
+                                <img src="{{ images[i] }}" alt="{{ categories[i] }}" class="w-full h-auto object-cover mx-auto">
+                                <div class="mt-2">
+                                    <strong>{{ categories[i] }}</strong><br>
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
                 </div>
             </section>
+                   
         </div>
 
         {% include 'components/footer.html.twig' %}
         {% endblock %}
 
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                new Swiper('.swiper-container', {
-                    slidesPerView: 1,
+             function setImageSize() {
+            const screenWidth = window.innerWidth;
+            const image1 = document.getElementById("image1");
+            const image2 = document.getElementById("image2");
+
+            if (screenWidth < 768) { 
+                const mobileHeight = Math.round(window.innerHeight * 0.5);
+                image1.style.width = "100%";
+                image2.style.width = "100%";
+                image1.style.height = `${mobileHeight}px`;
+                image2.style.height = `${mobileHeight}px`;
+
+            } else { 
+                image1.style.width = "50%";
+                image2.style.width = "50%";
+                image1.style.height = "800px";
+                image2.style.height = "800px";
+
+            }
+        }
+
+        window.onload = setImageSize;
+        window.onresize = setImageSize;
+            let swiper;
+
+            function initSwiper() {
+                if (swiper) {
+                    swiper.destroy(true, true); 
+                }
+
+                swiper = new Swiper('.swiper-container', {
+                    slidesPerView: 'auto',
                     spaceBetween: 16,
                     loop: true,
                     breakpoints: {
-                        640: {
-                            slidesPerView: 2,
-                        },
-                        768: {
-                            slidesPerView: 3,
-                        },
+                        640: { slidesPerView: 2 },
+                        768: { slidesPerView: 3 },
                     },
                     navigation: {
                         nextEl: '#nextBtn',
                         prevEl: '#prevBtn',
                     },
                 });
-
-                function setImageSize() {
-                    const screenWidth = window.innerWidth;
-                    const image1 = document.getElementById("image1");
-                    const image2 = document.getElementById("image2");
-
-                    if (screenWidth < 768) { 
-                        const mobileHeight = Math.round(window.innerHeight * 0.5);
-                        image1.style.width = "100%";
-                        image2.style.width = "100%";
-                        image1.style.height = `${mobileHeight}px`;
-                        image2.style.height = `${mobileHeight}px`;
-                    } else { 
-                        image1.style.width = "50%";
-                        image2.style.width = "50%";
-                        image1.style.height = "800px";
-                        image2.style.height = "800px";
-                    }
-                }
-
-                setImageSize();
-                window.addEventListener('resize', setImageSize);
-            });
+            }
+            document.addEventListener('DOMContentLoaded', initSwiper);
         </script>
+        
     </body>
 </html>
