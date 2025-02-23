@@ -24,13 +24,13 @@ class Invoice
     #[ORM\Column]
     private ?float $amount = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $billingAddress = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $billingCity = null;
 
-    #[ORM\Column(length: 10)]
+    #[ORM\Column(length: 10, nullable: true)]
     private ?string $billingPostalCode = null;
 
     public function getId(): ?int
@@ -79,9 +79,15 @@ class Invoice
         return $this->billingAddress;
     }
 
-    public function setBillingAddress(string $billingAddress): static
+    public function setBillingAddress(?string $billingAddress): static
     {
-        $this->billingAddress = $billingAddress;
+        if ($billingAddress === null) {
+            // Si l'adresse de facturation est nulle, récupérer la valeur depuis la session
+            $sessionBillingData = $_SESSION['billing_address'] ?? null;
+            $this->billingAddress = $sessionBillingData['address'] ?? null;
+        } else {
+            $this->billingAddress = $billingAddress;
+        }
 
         return $this;
     }
@@ -91,9 +97,15 @@ class Invoice
         return $this->billingCity;
     }
 
-    public function setBillingCity(string $billingCity): static
+    public function setBillingCity(?string $billingCity): static
     {
-        $this->billingCity = $billingCity;
+        if ($billingCity === null) {
+            // Si la ville de facturation est nulle, récupérer la valeur depuis la session
+            $sessionBillingData = $_SESSION['billing_address'] ?? null;
+            $this->billingCity = $sessionBillingData['city'] ?? null;
+        } else {
+            $this->billingCity = $billingCity;
+        }
 
         return $this;
     }
@@ -103,9 +115,15 @@ class Invoice
         return $this->billingPostalCode;
     }
 
-    public function setBillingPostalCode(string $billingPostalCode): static
+    public function setBillingPostalCode(?string $billingPostalCode): static
     {
-        $this->billingPostalCode = $billingPostalCode;
+        if ($billingPostalCode === null) {
+            // Si le code postal de facturation est nul, récupérer la valeur depuis la session
+            $sessionBillingData = $_SESSION['billing_address'] ?? null;
+            $this->billingPostalCode = $sessionBillingData['postal_code'] ?? null;
+        } else {
+            $this->billingPostalCode = $billingPostalCode;
+        }
 
         return $this;
     }

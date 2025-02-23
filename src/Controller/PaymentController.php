@@ -100,6 +100,7 @@ class PaymentController extends AbstractController
         ];
         
         $request->getSession()->set('billing_address', $billingData);
+    
         $billingData = $request->getSession()->get('billing_address');
         if (!$billingData) {
             return new JsonResponse(['error' => 'Adresse de facturation manquante.'], 400);
@@ -150,6 +151,7 @@ class PaymentController extends AbstractController
     
         return new JsonResponse(['id' => $session->id]);
     }
+
     /**
      * Page de succès après paiement
      */
@@ -181,10 +183,13 @@ class PaymentController extends AbstractController
         $invoice = new Invoice();
         $invoice->setUser($user)
             ->setTransactionDate(new \DateTime())
-            ->setAmount($totalAmount)
-            ->setBillingAddress($billingData['address'])
-            ->setBillingCity($billingData['city'])
-            ->setBillingPostalCode($billingData['postal_code']);
+            ->setAmount($totalAmount);
+
+        if ($billingData) {
+            $invoice->setBillingAddress($billingData['address'] ?? '')
+                ->setBillingCity($billingData['city'] ?? '')
+                ->setBillingPostalCode($billingData['postal_code'] ?? '');
+        }
 
         $entityManager->persist($invoice);
         $entityManager->flush();
