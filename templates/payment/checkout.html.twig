@@ -31,17 +31,23 @@
         event.preventDefault(); // Empêche l'envoi normal du formulaire
         
         let form = new FormData(this);
-        fetch("{{ path('checkout') }}", {
-            method: "POST",
-            body: form
-        })
-        .then(response => response.text())
-        .then(() => {
-            return fetch("{{ path('checkout-session') }}", { method: "POST" }); // Utilise la bonne route ici
+
+        // Envoie les données à la route 'checkout-session' pour créer une session de paiement
+        fetch("{{ path('checkout-session') }}", {
+            method: "POST", 
+            body: form // Envoie les mêmes données du formulaire dans la requête
         })
         .then(response => response.json())
-        .then(session => {
-            return Stripe("{{ stripe_public_key }}").redirectToCheckout({ sessionId: session.id });
+        .then(data => {
+            if (data.error) {
+                // Gérer l'erreur, afficher un message à l'utilisateur
+                console.error(data.error);
+                alert("Erreur : " + data.error);
+                return;
+            }
+
+            // Une fois la session récupérée, redirige vers Stripe Checkout
+            Stripe("{{ stripe_public_key }}").redirectToCheckout({ sessionId: data.id });
         })
         .catch(error => console.error("Erreur:", error));
     });

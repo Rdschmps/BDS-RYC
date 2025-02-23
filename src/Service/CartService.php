@@ -62,12 +62,9 @@ class CartService
                 ];
             }
 
-            // Mise à jour de la session avec les données de la BDD
             $this->session->set('cart', $cart);
             return $cart;
         }
-
-        // Si la session a un panier mais pas la BDD, on l'utilise temporairement
         return $sessionCart;
     }
 
