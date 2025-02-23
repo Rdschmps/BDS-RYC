@@ -64,4 +64,18 @@ class CartService
     }
 
 
+    public function syncCartFromDatabase(EntityManagerInterface $entityManager, User $user)
+    {
+        $cartItems = $entityManager->getRepository(Cart::class)->findBy(['user' => $user]);
+
+        $cartSession = [];
+        foreach ($cartItems as $cartItem) {
+            $cartSession[$cartItem->getArticle()->getId()] = $cartItem->getQuantity();
+        }
+
+        $this->session->set('cart', $cartSession);
+    }
+
+
+
 }

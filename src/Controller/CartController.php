@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Cart;
-
 use App\Entity\Article;
 use App\Form\CartType;
 use App\Repository\CartRepository;
@@ -14,19 +13,20 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Service\CartService;
 use App\Repository\ArticleRepository;
-
-
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 #[Route('/cart')]
 final class CartController extends AbstractController
 {
     #[Route('/', name: 'app_cart_index', methods: ['GET'])]
-    public function cart(EntityManagerInterface $entityManager): Response
+    public function cart(EntityManagerInterface $entityManager, CartService $cartService): Response
     {
         if (!$this->getUser()) {
             throw $this->createAccessDeniedException('Vous devez être connecté pour voir votre panier.');
         }
+
+        // Synchroniser le panier de la base de données avec la session
+        $cartService->syncCartFromDatabase($entityManager, $this->getUser());
 
         $cartItems = $entityManager->getRepository(Cart::class)->findBy(['user' => $this->getUser()]);
 
@@ -45,7 +45,7 @@ final class CartController extends AbstractController
                     'quantity' => $cartItem->getQuantity(),
                     'subtotal' => $article->getPrice() * $cartItem->getQuantity()
                 ];
-                
+
                 $total += $article->getPrice() * $cartItem->getQuantity();
             }
         }
@@ -55,9 +55,6 @@ final class CartController extends AbstractController
             'total' => $total
         ]);
     }
-
-    
-
 
     #[Route('/new', name: 'app_cart_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -115,7 +112,7 @@ final class CartController extends AbstractController
 
         return $this->redirectToRoute('app_cart_index', [], Response::HTTP_SEE_OTHER);
     }
-    
+
     #[Route('/add-to-cart/{id}', name: 'add_to_cart', methods: ['GET'])]
     public function addToCart(int $id, CartService $cartService, EntityManagerInterface $entityManager): RedirectResponse
     {
@@ -124,7 +121,7 @@ final class CartController extends AbstractController
             throw $this->createNotFoundException('Utilisateur non trouvé.');
         }
 
-        $cartService->addToCart($id, 1, $user, $entityManager); // ✅ Passe $entityManager correctement
+        $cartService->addToCart($id, 1, $user, $entityManager);
 
         return $this->redirectToRoute('app_cart_index');
     }
@@ -154,11 +151,4 @@ final class CartController extends AbstractController
         $this->addFlash('success', 'Article supprimé du panier.');
         return $this->redirectToRoute('app_cart_index');
     }
-
-
-
-    
-
-
-
 }

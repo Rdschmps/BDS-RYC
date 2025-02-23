@@ -78,7 +78,8 @@ class PaymentController extends AbstractController
     /**
      * Initialise le paiement Stripe et renvoie une session
      */
-    #[Route('/checkout-session', name: 'checkout', methods: ['POST'])]
+    #[Route('/create-checkout-session', name: 'checkout_session', methods: ['POST'])]
+
     public function checkout(Request $request, CartService $cartService, ArticleRepository $articleRepository): JsonResponse
     {
         Stripe::setApiKey($this->getParameter('stripe_secret_key'));
