@@ -129,11 +129,6 @@ final class CartController extends AbstractController
         return $this->redirectToRoute('app_cart_index');
     }
 
-
-
-
-
-
     #[Route('/cart/remove/{id}', name: 'remove_from_cart', methods: ['POST', 'GET'])]
     public function removeFromCart(int $id, EntityManagerInterface $entityManager): Response
     {
