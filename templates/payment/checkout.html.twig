@@ -6,7 +6,7 @@
 <div class="max-w-lg mx-auto mt-10 bg-white p-6 rounded-lg shadow-lg">
     <h2 class="text-2xl font-semibold text-gray-800 mb-4">🛒 Validation du panier</h2>
 
-    {{ form_start(form, {'attr': {'id': 'billingForm', 'class': 'space-y-4'}}) }}
+   {{ form_start(form, {'method': 'post', 'attr': {'id': 'billingForm', 'class': 'space-y-4'}}) }}
         <div>
             <label class="block text-sm font-medium text-gray-700">{{ form.address.vars.label }}</label>
             {{ form_widget(form.address, {'attr': {'class': 'mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500'}}) }}
@@ -31,17 +31,23 @@
         event.preventDefault(); // Empêche l'envoi normal du formulaire
         
         let form = new FormData(this);
-        fetch("{{ path('checkout_page') }}", {
-            method: "POST",
-            body: form
-        })
-        .then(response => response.text())
-        .then(() => {
-            return fetch("{{ path('checkout') }}", { method: "POST" });
+
+        // Envoie les données à la route 'checkout-session' pour créer une session de paiement
+        fetch("{{ path('checkout-session') }}", {
+            method: "POST", 
+            body: form // Envoie les mêmes données du formulaire dans la requête
         })
         .then(response => response.json())
-        .then(session => {
-            return Stripe("{{ stripe_public_key }}").redirectToCheckout({ sessionId: session.id });
+        .then(data => {
+            if (data.error) {
+                // Gérer l'erreur, afficher un message à l'utilisateur
+                console.error(data.error);
+                alert("Erreur : " + data.error);
+                return;
+            }
+
+            // Une fois la session récupérée, redirige vers Stripe Checkout
+            Stripe("{{ stripe_public_key }}").redirectToCheckout({ sessionId: data.id });
         })
         .catch(error => console.error("Erreur:", error));
     });

@@ -22,27 +22,32 @@ class PaymentController extends AbstractController
     /**
      * Affiche la page de validation du panier et du paiement
      */
-    #[Route('/checkout', name: 'checkout_page', methods: ['GET', 'POST'])]
+    #[Route('/checkout', name: 'checkout', methods: ['GET', 'POST'])]
     public function checkoutPage(Request $request, CartService $cartService, ArticleRepository $articleRepository): Response
     {
-        $cart = $cartService->getCart();
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $cart = $cartService->getCart($user);
         $total = 0;
         $cartItems = [];
 
-        foreach ($cart as $articleId => $quantity) {
+        foreach ($cart as $articleId => $data) {
             if ($this->useMockData) {
-                // Valeurs par défaut si pas de BDD
                 $article = [
                     'id' => $articleId,
                     'name' => "Produit #$articleId",
-                    'price' => 10.00, // 10€ par défaut
+                    'price' => 10.00,
                     'image' => 'default-image.jpg'
                 ];
             } else {
-            $article = $articleRepository->find($articleId);
-            if (!$article) {
-                continue;
-            }
+                $article = $articleRepository->find($articleId);
+                if (!$article) {
+                    continue;
+                }
+
                 $article = [
                     'id' => $article->getId(),
                     'name' => $article->getName(),
@@ -51,10 +56,10 @@ class PaymentController extends AbstractController
                 ];
             }
 
-            $total += $article['price'] * $quantity;
+            $total += $article['price'] * $data['quantity'];
             $cartItems[] = [
                 'product' => $article,
-                'quantity' => $quantity
+                'quantity' => $data['quantity']
             ];
         }
 
@@ -65,7 +70,7 @@ class PaymentController extends AbstractController
             $billingData = $form->getData();
             $request->getSession()->set('billing_address', $billingData);
 
-            return $this->redirectToRoute('checkout');
+            return $this->redirectToRoute('checkout_page');
         }
 
         return $this->render('payment/checkout.html.twig', [
@@ -78,55 +83,56 @@ class PaymentController extends AbstractController
     /**
      * Initialise le paiement Stripe et renvoie une session
      */
-    #[Route('/checkout-session', name: 'checkout', methods: ['POST'])]
+    #[Route('/checkout-session', name: 'checkout-session', methods: ['POST'])]
     public function checkout(Request $request, CartService $cartService, ArticleRepository $articleRepository): JsonResponse
     {
         Stripe::setApiKey($this->getParameter('stripe_secret_key'));
-
+    
+        $user = $this->getUser();
+        if (!$user) {
+            return new JsonResponse(['error' => 'Utilisateur non connecté.'], 403);
+        }
+    
         $billingData = $request->getSession()->get('billing_address');
         if (!$billingData) {
             return new JsonResponse(['error' => 'Adresse de facturation manquante.'], 400);
         }
-
-        $cart = $cartService->getCart();
+    
+        $cart = $cartService->getCart($user);
         if (empty($cart)) {
             return new JsonResponse(['error' => 'Le panier est vide.'], 400);
         }
-
+    
         $lineItems = [];
-        foreach ($cart as $articleId => $quantity) {
+        foreach ($cart as $articleId => $data) {
             if ($this->useMockData) {
                 $article = [
                     'name' => "Produit #$articleId",
-                    'price' => 10.00 // 10€ par défaut
+                    'price' => 10.00
                 ];
             } else {
             $article = $articleRepository->find($articleId);
             if (!$article) {
                 continue;
                 }
-                $article = [
-                    'name' => $article->getName(),
-                    'price' => $article->getPrice()
-                ];
             }
-
+    
             $lineItems[] = [
                 'price_data' => [
                     'currency' => 'eur',
                     'product_data' => [
-                        'name' => $article['name'],
+                        'name' => $article->getName(),
                     ],
-                    'unit_amount' => $article['price'] * 100, // Prix en centimes
+                    'unit_amount' => $article->getPrice() * 100,
                 ],
-                'quantity' => $quantity,
+                'quantity' => $data['quantity'],
             ];
         }
-
+    
         if (empty($lineItems)) {
             return new JsonResponse(['error' => 'Aucun produit valide trouvé.'], 400);
         }
-
+    
         $session = Session::create([
             'payment_method_types' => ['card'],
             'line_items' => $lineItems,
@@ -134,10 +140,9 @@ class PaymentController extends AbstractController
             'success_url' => $this->generateUrl('payment_success', [], 0),
             'cancel_url' => $this->generateUrl('payment_cancel', [], 0),
         ]);
-
+    
         return new JsonResponse(['id' => $session->id]);
     }
-
     /**
      * Page de succès après paiement
      */
@@ -149,38 +154,42 @@ class PaymentController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        $cart = $cartService->getCart();
+        $cart = $cartService->getCart($user);
+        if (empty($cart)) {
+            return $this->redirectToRoute('checkout_page');
+        }
+
         $totalAmount = 0;
         $billingData = $request->getSession()->get('billing_address');
 
-        foreach ($cart as $articleId => $quantity) {
+        foreach ($cart as $articleId => $data) {
             $article = $articleRepository->find($articleId);
-            if ($article && $article->getStock() && $article->getStock()->getQuantity() >= $quantity) {
-                $totalAmount += $article->getPrice() * $quantity;
-                $article->getStock()->setQuantity($article->getStock()->getQuantity() - $quantity);
+            if ($article && $article->getStock() && $article->getStock()->getQuantity() >= $data['quantity']) {
+                $totalAmount += $article->getPrice() * $data['quantity'];
+                $article->getStock()->setQuantity($article->getStock()->getQuantity() - $data['quantity']);
                 $entityManager->persist($article);
             }
         }
 
         $invoice = new Invoice();
         $invoice->setUser($user)
-                ->setTransactionDate(new \DateTime())
-                ->setAmount($totalAmount)
-                ->setBillingAddress($billingData['address'])
-                ->setBillingCity($billingData['city'])
-                ->setBillingPostalCode($billingData['postal_code']);
+            ->setTransactionDate(new \DateTime())
+            ->setAmount($totalAmount)
+            ->setBillingAddress($billingData['address'])
+            ->setBillingCity($billingData['city'])
+            ->setBillingPostalCode($billingData['postal_code']);
 
         $entityManager->persist($invoice);
         $entityManager->flush();
 
-        $cartService->clearCart();
+        $cartService->clearCart($user);
 
         return $this->render('payment/success.html.twig', ['invoice' => $invoice]);
     }
+
     /**
      * Page d'annulation du paiement
      */
-
     #[Route('/payment-cancel', name: 'payment_cancel')]
     public function cancel(): Response
     {
