@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Cart;
+
 use App\Entity\Article;
 use App\Form\CartType;
 use App\Repository\CartRepository;
@@ -21,51 +22,40 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 final class CartController extends AbstractController
 {
     #[Route('/', name: 'app_cart_index', methods: ['GET'])]
-    public function cart(CartService $cartService, ArticleRepository $articleRepository): Response
+    public function cart(EntityManagerInterface $entityManager): Response
     {
-        $useFakeData = false; // Active les données fictives 
-        $cart = $cartService->getCart();
+        if (!$this->getUser()) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour voir votre panier.');
+        }
+
+        $cartItems = $entityManager->getRepository(Cart::class)->findBy(['user' => $this->getUser()]);
+
         $articles = [];
         $total = 0;
-    
-        foreach ($cart as $articleId => $quantity) {
-            if ($useFakeData) {
-                // Produit fictif (sans base de données)
-                $article = [
-                    'id' => $articleId,
-                    'name' => "Article $articleId",
-                    'price' => 1000, // 10€
-                    'imageUrl' => 'assets/default-image.jpg',
-                    'quantity' => $quantity,
-                    'subtotal' => 1000 * $quantity
+
+        foreach ($cartItems as $cartItem) {
+            $article = $cartItem->getArticle();
+
+            if ($article) {
+                $articles[] = [
+                    'id' => $article->getId(),
+                    'name' => $article->getName(),
+                    'price' => $article->getPrice(),
+                    'imageUrl' => $article->getImageUrl() ? 'uploads/articles/' . $article->getImageUrl() : 'assets/default-image.jpg',
+                    'quantity' => $cartItem->getQuantity(),
+                    'subtotal' => $article->getPrice() * $cartItem->getQuantity()
                 ];
-                $articles[] = $article;
-                $total += $article['subtotal'];
-            } else {
-                $article = $articleRepository->find($articleId);
-    
-                if ($article) {
-                    $imageUrl = $article->getImageUrl() ? 'uploads/articles/' . $article->getImageUrl() : 'assets/default-image.jpg';
-    
-                    $articles[] = [
-                        'id' => $article->getId(),
-                        'name' => $article->getName(),
-                        'price' => $article->getPrice(),
-                        'imageUrl' => $imageUrl,
-                        'quantity' => $quantity,
-                        'subtotal' => $article->getPrice() * $quantity
-                    ];
-                    
-                    $total += $article->getPrice() * $quantity;
-                }
+                
+                $total += $article->getPrice() * $cartItem->getQuantity();
             }
         }
-    
+
         return $this->render('cart/cart.html.twig', [
             'articles' => $articles,
             'total' => $total
         ]);
     }
+
     
 
 
@@ -127,16 +117,53 @@ final class CartController extends AbstractController
     }
     
     #[Route('/add-to-cart/{id}', name: 'add_to_cart', methods: ['GET'])]
-    public function addToCart(int $id, CartService $cartService, ArticleRepository $articleRepository): RedirectResponse
+    public function addToCart(int $id, CartService $cartService, EntityManagerInterface $entityManager): RedirectResponse
     {
-        $article = $articleRepository->find($id);
-
-        if (!$article) {
-            throw $this->createNotFoundException('Article non trouvé.');
+        $user = $this->getUser();
+        if (!$user) {
+            throw $this->createNotFoundException('Utilisateur non trouvé.');
         }
 
-        $cartService->addToCart($id, 1);
+        $cartService->addToCart($id, 1, $user, $entityManager); // ✅ Passe $entityManager correctement
 
         return $this->redirectToRoute('app_cart_index');
     }
+
+
+
+
+
+
+    #[Route('/cart/remove/{id}', name: 'remove_from_cart', methods: ['POST', 'GET'])]
+    public function removeFromCart(int $id, EntityManagerInterface $entityManager): Response
+    {
+        if (!$this->getUser()) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour gérer votre panier.');
+        }
+
+        // Récupérer l'article dans le panier pour cet utilisateur
+        $cartItem = $entityManager->getRepository(Cart::class)->findOneBy([
+            'user' => $this->getUser(),
+            'article' => $id
+        ]);
+
+        if (!$cartItem) {
+            $this->addFlash('warning', 'Cet article n\'est pas dans votre panier.');
+            return $this->redirectToRoute('app_cart_index');
+        }
+
+        // Supprime l'article spécifique du panier
+        $entityManager->remove($cartItem);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Article supprimé du panier.');
+        return $this->redirectToRoute('app_cart_index');
+    }
+
+
+
+    
+
+
+
 }

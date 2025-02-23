@@ -3,6 +3,12 @@
 namespace App\Service;
 
 use Symfony\Component\HttpFoundation\RequestStack;
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Cart; 
+use App\Entity\Article;
+
+
 
 class CartService
 {
@@ -13,18 +19,27 @@ class CartService
         $this->session = $requestStack->getSession();
     }
 
-    public function addToCart(int $productId, int $quantity)
-    {
-        $cart = $this->session->get('cart', []);
+    public function addToCart(int $articleId, int $quantity = 1, User $user, EntityManagerInterface $entityManager)
 
-        if (isset($cart[$productId])) {
-            $cart[$productId] += $quantity;
+    {
+        $cartItem = $entityManager->getRepository(Cart::class)->findOneBy([
+            'user' => $user,
+            'article' => $articleId
+        ]);
+
+        if ($cartItem) {
+            $cartItem->setQuantity($cartItem->getQuantity() + $quantity);
         } else {
-            $cart[$productId] = $quantity;
+            $cartItem = new Cart();
+            $cartItem->setUser($user);
+            $cartItem->setArticle($entityManager->getRepository(Article::class)->find($articleId));
+            $cartItem->setQuantity($quantity);
+            $entityManager->persist($cartItem);
         }
 
-        $this->session->set('cart', $cart);
+        $entityManager->flush();
     }
+
 
     public function getCart(): array
     {
@@ -35,4 +50,18 @@ class CartService
     {
         $this->session->remove('cart');
     }
+
+
+    public function removeFromCart(int $productId)
+    {
+        $cart = $this->session->get('cart', []);
+
+        if (isset($cart[$productId])) {
+            unset($cart[$productId]); // Supprime l'article du panier
+        }
+
+        $this->session->set('cart', $cart);
+    }
+
+
 }
