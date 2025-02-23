@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mentions Légales{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto max-w-screen-xl px-4 py-10">
+        <h1 class="text-center text-3xl font-semibold mb-8">Mentions Légales</h1>
+
+        <p class="text-lg mb-6">Conformément aux dispositions de la loi n° 2004-575 du 21 juin 2004 pour la confiance en l'économie numérique, il est précisé aux utilisateurs du site BDS-RYC l'identité des différents intervenants dans le cadre de sa réalisation et de son suivi.</p>
+
+        <h2 class="text-2xl font-semibold mb-4">Edition du site</h2>
+        <p class="text-lg mb-6">Le présent site, accessible à l’URL <a href="https://www.bds-ryc.com" target="_blank" class="text-blue-500 underline">www.bds-ryc.com</a> (le « Site »), est édité par :</p>
+        <ul class="list-disc pl-6 mb-6">
+            <li class="text-lg">L’association BDS Rennes Ynov Campus, enregistrée auprès de la préfecture/sous-préfecture de 35 - Préfecture Rennes sous le numéro <strong>W353023946</strong>, ayant son siège situé à 42 Rue du Capitaine Maignan, 35000 Rennes, représentée par Rayan Deschamps dûment habilité(e)</li>
+        </ul>
+
+        <h2 class="text-2xl font-semibold mb-4">Hébergement</h2>
+        <p class="text-lg mb-6">Le Site est hébergé par la société <strong>Hostinger</strong>, situé à <a href="https://www.hostinger.fr/contact" target="_blank" class="text-blue-500 underline">Hostinger Contact</a>, (contact téléphonique ou email).</p>
+
+        <h2 class="text-2xl font-semibold mb-4">Directeur de publication</h2>
+        <p class="text-lg mb-6">Le Directeur de la publication du Site est <strong>Deschamps Rayan (Président)</strong>.</p>
+
+        <h2 class="text-2xl font-semibold mb-4">Nous contacter</h2>
+        <ul class="list-disc pl-6 mb-6">
+            <li class="text-lg">Par téléphone : <strong>+33781848987</strong></li>
+            <li class="text-lg">Par email : <strong><a href="mailto:bds.ryc35@gmail.com" class="text-blue-500 underline">bds.ryc35@gmail.com</a></strong></li>
+            <li class="text-lg">Par courrier : 42 Rue du Capitaine Maignan, 35000 Rennes</li>
+        </ul>
+
+        <h2 class="text-2xl font-semibold mb-4">Données personnelles</h2>
+        <p class="text-lg mb-6">Le traitement de vos données à caractère personnel est régi par notre Charte du respect de la vie privée, disponible depuis la section "Charte de Protection des Données Personnelles", conformément au Règlement Général sur la Protection des Données 2016/679 du 27 avril 2016 («RGPD»).</p>
+
+        <p class="text-lg"><em>Génération des mentions légales par <a href="https://legalstart.fr" target="_blank" class="text-blue-500 underline">Legalstart.fr</a>.</em></p>
+    </div>
+
+    {% include 'components/footer.html.twig' %}
+{% endblock %}

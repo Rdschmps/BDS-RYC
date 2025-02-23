@@ -92,7 +92,14 @@ class PaymentController extends AbstractController
         if (!$user) {
             return new JsonResponse(['error' => 'Utilisateur non connecté.'], 403);
         }
-    
+        // Sauvegarder les données de facturation dans la session
+        $billingData = [
+            'address' => $request->request->get('address'),
+            'city' => $request->request->get('city'),
+            'postal_code' => $request->request->get('postal_code'),
+        ];
+        
+        $request->getSession()->set('billing_address', $billingData);
         $billingData = $request->getSession()->get('billing_address');
         if (!$billingData) {
             return new JsonResponse(['error' => 'Adresse de facturation manquante.'], 400);
