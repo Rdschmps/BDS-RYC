@@ -5,7 +5,7 @@ namespace App\Service;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Cart; // ✅ Doit être présent ici
+use App\Entity\Cart; 
 use App\Entity\Article;
 
 

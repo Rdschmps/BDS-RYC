@@ -134,27 +134,33 @@ final class CartController extends AbstractController
 
 
 
-    #[Route('/remove-from-cart/{id}', name: 'remove_from_cart', methods: ['GET'])]
-    public function removeFromCart(int $id, CartService $cartService, EntityManagerInterface $entityManager): RedirectResponse
+    #[Route('/cart/remove/{id}', name: 'remove_from_cart', methods: ['POST', 'GET'])]
+    public function removeFromCart(int $id, EntityManagerInterface $entityManager): Response
     {
-        $user = $this->getUser();
-        if (!$user) {
-            $this->addFlash('error', 'Vous devez être connecté pour supprimer un article du panier.');
-            return $this->redirectToRoute('app_login');
+        if (!$this->getUser()) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour gérer votre panier.');
         }
 
+        // Récupérer l'article dans le panier pour cet utilisateur
         $cartItem = $entityManager->getRepository(Cart::class)->findOneBy([
-            'user' => $user,
+            'user' => $this->getUser(),
             'article' => $id
         ]);
 
-        if ($cartItem) {
-            $entityManager->remove($cartItem);
-            $entityManager->flush();
+        if (!$cartItem) {
+            $this->addFlash('warning', 'Cet article n\'est pas dans votre panier.');
+            return $this->redirectToRoute('app_cart_index');
         }
 
+        // Supprime l'article spécifique du panier
+        $entityManager->remove($cartItem);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Article supprimé du panier.');
         return $this->redirectToRoute('app_cart_index');
     }
+
+
 
     
 

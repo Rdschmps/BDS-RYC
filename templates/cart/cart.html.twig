@@ -40,10 +40,12 @@
                             <td class="py-3 px-4 text-center">{{ article.quantity }}</td>
                             <td class="py-3 px-4 text-center font-semibold">{{ article.subtotal }} €</td>
                             <td class="py-3 px-4 text-center">
-                                <a href="{{ path('remove_from_cart', {'id': article.id}) }}" 
-                                   class="bg-red-600 text-white px-3 py-2 rounded-md shadow-md hover:bg-red-700 transition">
-                                   ❌ Supprimer
-                                </a>
+                                <form method="POST" action="{{ path('remove_from_cart', {'id': article.id}) }}">
+                                    <button type="submit" class="bg-red-600 text-white px-3 py-2 rounded-md shadow-md hover:bg-red-700 transition">
+                                        ❌ Supprimer
+                                    </button>
+                                </form>
+                                
                             </td>
                         </tr>
                     {% endfor %}
