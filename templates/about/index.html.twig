@@ -1,20 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AboutController!{% endblock %}
+{% block title %}À Propos de Nous{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<div class="container mx-auto max-w-screen-xl px-4 py-10">
+    <!-- 🎯 Section Bannière -->
+            <h1 class="text-white text-4xl font-extrabold">À Propos du BDS</h1>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <!-- 🏆 Présentation -->
+    <div class="mt-10 text-center">
+        <h2 class="text-3xl font-bold text-gray-900">Qui sommes-nous ?</h2>
+        <p class="text-lg text-gray-700 mt-4 leading-relaxed">
+            Nous sommes une <strong>association étudiante dynamique</strong>, le <strong>Bureau des Sports (BDS)</strong>, 
+            dédiée à promouvoir la pratique sportive et à organiser des événements fun et conviviaux pour tous les étudiants. 🏀⚽🏆
+        </p>
+    </div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>D:/xampp/htdocs/BackLikeINeverLeft/2120/BDS-RYC/src/Controller/AboutController.php</code></li>
-        <li>Your template at <code>D:/xampp/htdocs/BackLikeINeverLeft/2120/BDS-RYC/templates/about/index.html.twig</code></li>
-    </ul>
+    <!-- 💡 Objectifs -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
+        <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+            <h3 class="text-xl font-semibold text-indigo-600">🥇 Esprit Sportif</h3>
+            <p class="text-gray-700 mt-2">Encourager la pratique sportive accessible à tous.</p>
+        </div>
+        <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+            <h3 class="text-xl font-semibold text-indigo-600">🎉 Événements</h3>
+            <p class="text-gray-700 mt-2">Organisation de tournois, rencontres et activités fun.</p>
+        </div>
+        <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+            <h3 class="text-xl font-semibold text-indigo-600">🤝 Communauté</h3>
+            <p class="text-gray-700 mt-2">Créer du lien entre les étudiants passionnés de sport.</p>
+        </div>
+    </div>
+
+    <!-- 📢 Call-To-Action -->
+    <div class="text-center mt-10">
+        <a href="javascript:;"
+           class="bg-indigo-600 text-white px-6 py-3 rounded-lg text-lg font-semibold shadow-md hover:bg-indigo-700 transition-all ease-in-out duration-300">
+           📩 Nous contacter
+        </a>
+    </div>
 </div>
+
+{% include 'components/footer.html.twig' %}
 {% endblock %}
