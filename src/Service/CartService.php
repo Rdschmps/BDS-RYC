@@ -5,26 +5,30 @@ namespace App\Service;
 use Symfony\Component\HttpFoundation\RequestStack;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Cart; 
+use App\Entity\Cart;
 use App\Entity\Article;
-
-
 
 class CartService
 {
     private $session;
+    private $entityManager;
 
-    public function __construct(RequestStack $requestStack)
+    public function __construct(RequestStack $requestStack, EntityManagerInterface $entityManager)
     {
         $this->session = $requestStack->getSession();
+        $this->entityManager = $entityManager;
     }
 
-    public function addToCart(int $articleId, int $quantity = 1, User $user, EntityManagerInterface $entityManager)
-
+    public function addToCart(int $articleId, int $quantity = 1, User $user)
     {
-        $cartItem = $entityManager->getRepository(Cart::class)->findOneBy([
+        $article = $this->entityManager->getRepository(Article::class)->find($articleId);
+        if (!$article) {
+            throw new \Exception("L'article n'existe pas.");
+        }
+
+        $cartItem = $this->entityManager->getRepository(Cart::class)->findOneBy([
             'user' => $user,
-            'article' => $articleId
+            'article' => $article
         ]);
 
         if ($cartItem) {
@@ -32,36 +36,91 @@ class CartService
         } else {
             $cartItem = new Cart();
             $cartItem->setUser($user);
-            $cartItem->setArticle($entityManager->getRepository(Article::class)->find($articleId));
+            $cartItem->setArticle($article);
             $cartItem->setQuantity($quantity);
-            $entityManager->persist($cartItem);
+            $this->entityManager->persist($cartItem);
         }
 
-        $entityManager->flush();
+        $this->entityManager->flush();
+        $this->updateSessionCart($user);
     }
 
-
-    public function getCart(): array
+    public function getCart(User $user): array
     {
-        return $this->session->get('cart', []);
+        $sessionCart = $this->session->get('cart', []);
+        $cartFromDb = $this->entityManager->getRepository(Cart::class)->findBy(['user' => $user]);
+
+        if (!empty($cartFromDb)) {
+            $cart = [];
+            foreach ($cartFromDb as $cartItem) {
+                $cart[$cartItem->getArticle()->getId()] = [
+                    'id' => $cartItem->getArticle()->getId(),
+                    'name' => $cartItem->getArticle()->getName(),
+                    'price' => $cartItem->getArticle()->getPrice(),
+                    'quantity' => $cartItem->getQuantity(),
+                    'total' => $cartItem->getQuantity() * $cartItem->getArticle()->getPrice()
+                ];
+            }
+
+            // Mise à jour de la session avec les données de la BDD
+            $this->session->set('cart', $cart);
+            return $cart;
+        }
+
+        // Si la session a un panier mais pas la BDD, on l'utilise temporairement
+        return $sessionCart;
     }
 
-    public function clearCart()
+    public function clearCart(User $user)
     {
+        // Supprime les données de la session
         $this->session->remove('cart');
+
+        // Supprime les articles du panier en base de données
+        $cartItems = $this->entityManager->getRepository(Cart::class)->findBy(['user' => $user]);
+        foreach ($cartItems as $cartItem) {
+            $this->entityManager->remove($cartItem);
+        }
+
+        $this->entityManager->flush();
     }
 
-
-    public function removeFromCart(int $productId)
+    public function removeFromCart(int $articleId, User $user)
     {
+        // Supprime de la session
         $cart = $this->session->get('cart', []);
+        if (isset($cart[$articleId])) {
+            unset($cart[$articleId]);
+        }
+        $this->session->set('cart', $cart);
 
-        if (isset($cart[$productId])) {
-            unset($cart[$productId]); // Supprime l'article du panier
+        // Supprime de la BDD
+        $cartItem = $this->entityManager->getRepository(Cart::class)->findOneBy([
+            'user' => $user,
+            'article' => $articleId
+        ]);
+
+        if ($cartItem) {
+            $this->entityManager->remove($cartItem);
+            $this->entityManager->flush();
+        }
+    }
+
+    private function updateSessionCart(User $user)
+    {
+        $cartItems = $this->entityManager->getRepository(Cart::class)->findBy(['user' => $user]);
+
+        $cart = [];
+        foreach ($cartItems as $cartItem) {
+            $cart[$cartItem->getArticle()->getId()] = [
+                'id' => $cartItem->getArticle()->getId(),
+                'name' => $cartItem->getArticle()->getName(),
+                'price' => $cartItem->getArticle()->getPrice(),
+                'quantity' => $cartItem->getQuantity(),
+                'total' => $cartItem->getQuantity() * $cartItem->getArticle()->getPrice()
+            ];
         }
 
         $this->session->set('cart', $cart);
     }
-
-
 }

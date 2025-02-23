@@ -3,19 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Cart;
-
 use App\Entity\Article;
 use App\Form\CartType;
+use App\Service\CartService;
 use App\Repository\CartRepository;
+use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use App\Service\CartService;
-use App\Repository\ArticleRepository;
-
-
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 #[Route('/cart')]
@@ -24,11 +21,12 @@ final class CartController extends AbstractController
     #[Route('/', name: 'app_cart_index', methods: ['GET'])]
     public function cart(EntityManagerInterface $entityManager): Response
     {
-        if (!$this->getUser()) {
+        $user = $this->getUser();
+        if (!$user) {
             throw $this->createAccessDeniedException('Vous devez être connecté pour voir votre panier.');
         }
 
-        $cartItems = $entityManager->getRepository(Cart::class)->findBy(['user' => $this->getUser()]);
+        $cartItems = $entityManager->getRepository(Cart::class)->findBy(['user' => $user]);
 
         $articles = [];
         $total = 0;
@@ -43,7 +41,7 @@ final class CartController extends AbstractController
                     'price' => $article->getPrice(),
                     'imageUrl' => $article->getImageUrl() ? 'uploads/articles/' . $article->getImageUrl() : 'assets/default-image.jpg',
                     'quantity' => $cartItem->getQuantity(),
-                    'subtotal' => $article->getPrice() * $cartItem->getQuantity()
+                    'subtotal' => $article->getPrice() * $cartItem->getQuantity(),
                 ];
                 
                 $total += $article->getPrice() * $cartItem->getQuantity();
@@ -55,9 +53,6 @@ final class CartController extends AbstractController
             'total' => $total
         ]);
     }
-
-    
-
 
     #[Route('/new', name: 'app_cart_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -117,48 +112,29 @@ final class CartController extends AbstractController
     }
     
     #[Route('/add-to-cart/{id}', name: 'add_to_cart', methods: ['GET'])]
-    public function addToCart(int $id, CartService $cartService, EntityManagerInterface $entityManager): RedirectResponse
+    public function addToCart(int $id, CartService $cartService): RedirectResponse
     {
         $user = $this->getUser();
         if (!$user) {
             throw $this->createNotFoundException('Utilisateur non trouvé.');
         }
 
-        $cartService->addToCart($id, 1, $user, $entityManager); // ✅ Passe $entityManager correctement
+        $cartService->addToCart($id, 1, $user);
 
         return $this->redirectToRoute('app_cart_index');
     }
 
-    #[Route('/cart/remove/{id}', name: 'remove_from_cart', methods: ['POST', 'GET'])]
-    public function removeFromCart(int $id, EntityManagerInterface $entityManager): Response
+    #[Route('/remove-from-cart/{id}', name: 'remove_from_cart', methods: ['POST', 'GET'])]
+    public function removeFromCart(int $id, CartService $cartService): RedirectResponse
     {
-        if (!$this->getUser()) {
+        $user = $this->getUser();
+        if (!$user) {
             throw $this->createAccessDeniedException('Vous devez être connecté pour gérer votre panier.');
         }
 
-        // Récupérer l'article dans le panier pour cet utilisateur
-        $cartItem = $entityManager->getRepository(Cart::class)->findOneBy([
-            'user' => $this->getUser(),
-            'article' => $id
-        ]);
-
-        if (!$cartItem) {
-            $this->addFlash('warning', 'Cet article n\'est pas dans votre panier.');
-            return $this->redirectToRoute('app_cart_index');
-        }
-
-        // Supprime l'article spécifique du panier
-        $entityManager->remove($cartItem);
-        $entityManager->flush();
+        $cartService->removeFromCart($id, $user);
 
         $this->addFlash('success', 'Article supprimé du panier.');
         return $this->redirectToRoute('app_cart_index');
     }
-
-
-
-    
-
-
-
 }
