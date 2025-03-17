@@ -1,138 +1,131 @@
-# Projet Ymerssion - Étapes d'initialisation
+# Ymerssion Project - Initialization Steps
 
-Ce projet utilise **Symfony** comme framework PHP. Voici les étapes à suivre pour initialiser et configurer correctement le projet après avoir cloné ou récupéré les dernières modifications.
+This project uses **Symfony** as the PHP framework along with **Tailwind CSS** for styling. Below are the steps to properly initialize and configure the project after cloning or retrieving the latest updates.
 
-## Prérequis
+## Prerequisites
 
-Avant de commencer, assure-toi d'avoir installé les outils suivants :
+Before starting, make sure you have the following tools installed:
 
-- **PHP** (version 8.x ou supérieure)
-- **Composer** (gestionnaire de dépendances PHP)
-- **Node.js** et **NPM** ou **Yarn** (Nous utilisons **NPM** dans ce projet)
-- **MySQL** (ou tout autre système de gestion de base de données compatible)
+- **PHP** (version 8.x or higher)
+- **Composer** (PHP dependency manager)
+- **Node.js** and **NPM** (We use **NPM** in this project)
+- **MySQL** (or any other compatible database management system)
 
-## Étapes d'initialisation
+## Initialization Steps
 
-### 1. Cloner le projet
+### 1. Clone the Project
 
-Si ce n'est pas déjà fait, clone le projet depuis le dépôt Git :
+If you haven't already, clone the project from the Git repository:
 
 ```bash
 git clone https://github.com/Rdschmps/BDS-RYC.git
 cd BDS-RYC
 ```
 
-### 2. Configuration de l'environnement
+### 2. Configure the Environment
 
-Le fichier `.env.local` contient les variables d'environnement pour le projet, comme les informations de base de données, les clés API, etc.
+The `.env.local` file contains the environment variables for the project, such as database credentials and API keys.
 
-- Si tu n'as pas de fichier `.env.local`, copie le fichier `.env` vers `.env.local` :
+- If you don't have a `.env.local` file, copy the `.env` file:
 
   ```bash
   cp .env .env.local
   ```
 
-Ensuite, modifie les lignes concernant la base de données en supprimant le commentaire pour activer la connexion (il est recommandé de créer un utilisateur spécifique pour la base de données plutôt que d'utiliser **root**). Voici les lignes à modifier dans le fichier `.env.local` :
-![Image lignes du .env.local à modifier](assets/imgReadme/bddLines.png)
+Then, modify the database connection lines by removing the comment to activate the connection (it is recommended to create a specific database user instead of using **root**). Below are the lines to modify in the `.env.local` file:
 
-Enfin, ajoute la clé publique pour Stripe dans le fichier `.env.local` :
+![Image of lines to modify in .env.local](assets/imgReadme/bddLines.png)
+
+Finally, add the public key for Stripe in the `.env.local` file:
 
 ```bash
 STRIPE_PUBLIC_KEY=pk_test_51QtsanEIP0qBpZTPWl4gK2O6mmvOouoydK2Is8RCSRD71DiWnPU3UWr0TwkQTCa7vQZfltDhdFPaWz8fR147wJ3c00nvjVMxMh
 ```
 
-Si tu veux tester l'achat complet, ajoute également ta clé privée Stripe.
+If you want to test the complete purchase process, also add your private Stripe key.
 
-### 3. Installer les dépendances PHP
+### 3. Install PHP Dependencies
 
-Installe les dépendances PHP avec Composer :
+Install PHP dependencies with Composer:
 
 ```bash
 composer update
 ```
 
-Puis, pour installer toutes les dépendances nécessaires :
+Then, install all necessary dependencies:
 
 ```bash
 composer install
 ```
 
-Cela installera toutes les dépendances PHP pour le bon fonctionnement de l'application.
+This will install all required PHP dependencies for the application to function properly.
 
-### 4. Installer les dépendances JavaScript
+### 4. Install JavaScript Dependencies
 
-Pour installer les dépendances front-end, utilise **NPM** :
+To install front-end dependencies, use **NPM**:
 
 ```bash
 npm install
 ```
 
-### 5. Configurer la base de données
+### 5. Set Up the Database
 
-Pour configurer ta base de données, applique d'abord les migrations pour créer la base de données :
+To set up your database, first apply the migrations to create the database:
 
 ```bash
 php bin/console doctrine:database:create
 ```
 
-Ensuite, crée les tables en appliquant les migrations :
+Then, create the tables by applying the migrations:
 
 ```bash
 php bin/console doctrine:migrations:migrate
 ```
 
-### 6. Démarrer le serveur de développement
+### 6. Start the Development Server
 
-Tu peux démarrer le serveur de développement intégré de Symfony pour voir si tout fonctionne correctement :
+You can start Symfony’s built-in development server to check if everything is working correctly:
 
 ```bash
 symfony server:start
 ```
 
-Dans un autre terminal, pour voir les modifications en direct avec NPM, lance :
+In another terminal, to see live changes with NPM, run:
 
 ```bash
 npm run watch
 ```
 
-Ou, pour démarrer en mode développement :
+Or, to start in development mode:
 
 ```bash
 npm run dev
 ```
 
-Cela lancera le serveur à l'adresse [http://127.0.0.1:8000](http://127.0.0.1:8000).
+This will launch the server at [http://127.0.0.1:8000](http://127.0.0.1:8000).
 
 ---
 
-## Commandes utiles
+## Useful Commands
 
-- `php bin/console doctrine:database:create` - Crée la base de données.
-- `php bin/console doctrine:migrations:migrate` - Applique les migrations pour créer les tables.
+- `php bin/console doctrine:database:create` - Creates the database.
+- `php bin/console doctrine:migrations:migrate` - Applies migrations to create tables.
+- `php bin/console cache:clear` - Clears the cache.
+- `symfony server:start` - Starts the Symfony local server.
 
-## Dépendances
+## Dependencies
 
-Le projet utilise les dépendances suivantes :
+This project uses the following dependencies:
 
-- **Symfony** : Framework PHP
-- **Composer** : Gestionnaire de dépendances PHP
-- **NPM/Yarn** : Gestionnaire de dépendances JavaScript
-
----
-
-Si tu rencontres des problèmes, vérifie que tous les services (base de données, serveur de cache, etc.) sont bien en cours d'exécution et que la configuration dans le fichier `.env.local` est correcte.
-
----
-
-Bonne chance et bon développement !
+- **Symfony**: PHP framework
+- **Composer**: PHP dependency manager
+- **NPM**: JavaScript dependency manager
+- **Tailwind CSS**: Utility-first CSS framework
 
 ---
 
-### Explication des sections :
+If you encounter any issues, ensure that all required services (database, cache server, etc.) are running and that the `.env.local` file is correctly configured.
 
-1. **Cloner le projet** : Première étape pour récupérer le code source.
-2. **Installer les dépendances PHP et JavaScript** : Installation des dépendances via Composer pour PHP et NPM/Yarn pour les dépendances front-end.
-3. **Configurer l'environnement** : Configuration du fichier `.env.local` avec les paramètres nécessaires.
-4. **Configurer la base de données** : Application des migrations pour créer la base de données et les tables.
-5. **Vider le cache et les vues** : Commandes pour assurer que Symfony utilise la dernière configuration et vue.
-6. **Démarrer le serveur de développement** : Lancement du serveur intégré de Symfony pour tester l'application.
+---
+
+Good luck and happy coding!
