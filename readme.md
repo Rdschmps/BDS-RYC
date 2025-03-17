@@ -1,6 +1,6 @@
 # Ymerssion Project - Initialization Steps
 
-This project uses **Symfony** as the PHP framework along with **Tailwind CSS** for styling. Below are the steps to properly initialize and configure the project after cloning or retrieving the latest updates.
+This project uses **Symfony** as the PHP framework along with **Tailwind CSS** for styling. It also integrates **Stripe** for payment processing. Below are the steps to properly initialize and configure the project after cloning or retrieving the latest updates.
 
 ## Prerequisites
 
@@ -42,7 +42,11 @@ Finally, add the public key for Stripe in the `.env.local` file:
 STRIPE_PUBLIC_KEY=pk_test_51QtsanEIP0qBpZTPWl4gK2O6mmvOouoydK2Is8RCSRD71DiWnPU3UWr0TwkQTCa7vQZfltDhdFPaWz8fR147wJ3c00nvjVMxMh
 ```
 
-If you want to test the complete purchase process, also add your private Stripe key.
+If you want to test the complete purchase process, also add your private Stripe key:
+
+```bash
+STRIPE_SECRET_KEY=sk_test_xxxxxxxxxxxxxxxxxxxxxxxx
+```
 
 ### 3. Install PHP Dependencies
 
@@ -121,6 +125,7 @@ This project uses the following dependencies:
 - **Composer**: PHP dependency manager
 - **NPM**: JavaScript dependency manager
 - **Tailwind CSS**: Utility-first CSS framework
+- **Stripe**: Payment processing integration
 
 ---
 
@@ -129,3 +134,4 @@ If you encounter any issues, ensure that all required services (database, cache 
 ---
 
 Good luck and happy coding!
+
